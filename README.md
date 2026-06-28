@@ -48,6 +48,95 @@ git switch sirius-light-buggy
 
 Ожидаемый результат: Sirius-тесты падают и показывают воспроизводимые баги.
 
+## Ручное воспроизведение двух багов
+
+Сначала разверните окружение в нужной ветке:
+
+```bash
+git switch sirius-light-buggy
+./scripts/setup_sirius.sh
+```
+
+Скрипт ставит текущую ветку SymPy в editable-режиме и создает виртуальное
+окружение рядом с папкой репозитория: `../.venv`. Примеры ниже можно запускать
+через `../.venv/bin/python`, не активируя окружение вручную.
+
+### Баг 1: Mathematica printer не умеет печатать `Max` и `Min`
+
+Пример использования библиотеки:
+
+```bash
+../.venv/bin/python - <<'PY'
+from sympy import Max, Min, mathematica_code, symbols
+
+x, y, z = symbols("x y z")
+print(mathematica_code(Max(x, y, z) * Min(y, z)))
+PY
+```
+
+В ветке `sirius-light-buggy` пример падает с ошибкой про неподдержанный `Max`:
+
+```text
+PrintMethodNotImplementedError: Unsupported by ... MCodePrinter ... Max
+```
+
+В ветке `sirius-light-golden` тот же пример работает:
+
+```bash
+git switch sirius-light-golden
+./scripts/setup_sirius.sh
+../.venv/bin/python - <<'PY'
+from sympy import Max, Min, mathematica_code, symbols
+
+x, y, z = symbols("x y z")
+print(mathematica_code(Max(x, y, z) * Min(y, z)))
+PY
+```
+
+Ожидаемый вывод:
+
+```text
+Max[x, y, z]*Min[y, z]
+```
+
+### Баг 2: `Point` нельзя умножить на число слева
+
+Пример использования библиотеки:
+
+```bash
+git switch sirius-light-buggy
+./scripts/setup_sirius.sh
+../.venv/bin/python - <<'PY'
+from sympy import Point
+
+print(5 * Point(1, 1))
+PY
+```
+
+В ветке `sirius-light-buggy` пример падает:
+
+```text
+TypeError: unsupported operand type(s) for *: 'int' and 'Point2D'
+```
+
+В ветке `sirius-light-golden` тот же пример работает:
+
+```bash
+git switch sirius-light-golden
+./scripts/setup_sirius.sh
+../.venv/bin/python - <<'PY'
+from sympy import Point
+
+print(5 * Point(1, 1))
+PY
+```
+
+Ожидаемый вывод:
+
+```text
+Point2D(5, 5)
+```
+
 ---
 
 # SymPy
