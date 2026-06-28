@@ -1,45 +1,150 @@
 # SymPy Light
 
-Это учебный fork SymPy для первого погружения команды в проект по поиску и
-исправлению багов в Python-библиотеке.
+Это учебный репозиторий для первого погружения команды в проект SymPy.
 
-Исходное описание проекта SymPy находится в оригинальном README:
+Сначала откройте исходное описание настоящего проекта SymPy:
 [sympy/sympy README.md](https://github.com/sympy/sympy/blob/master/README.md).
 
-Методическое пособие для наставника вынесено в отдельный файл:
+Методическое пособие для наставника лежит здесь:
 [METHODOLOGICAL_GUIDE.md](METHODOLOGICAL_GUIDE.md).
 
-## Подготовка окружения
+## Что это за репозиторий
 
-Клонируйте репозиторий:
+Этот репозиторий - копия SymPy, в которую добавлены учебные ветки, тесты и
+карточки багов.
+
+SymPy - это Python-библиотека для символьной математики. Она работает не только
+с числами, но и с формулами: может упрощать выражения, брать производные,
+решать уравнения, работать с матрицами и печатать выражения в других форматах.
+
+В репозитории есть две главные ветки:
+
+- `sirius-light-buggy` - ветка с 10 внесенными багами. В начале работы учебные
+  тесты в этой ветке должны падать.
+- `sirius-light-golden` - эталонная ветка с исправленным поведением. В этой
+  ветке учебные тесты должны проходить.
+
+Полный набор тестов SymPy запускать не нужно. В этом проекте команда работает
+только с учебными тестами из `sirius_tests/`.
+
+## Что нужно установить
+
+Если на компьютере еще не настроено окружение, сначала установите:
+
+1. Python 3.
+2. Git.
+3. Терминал, в котором можно запускать команды.
+
+### macOS
+
+Установите Python с сайта [python.org/downloads](https://www.python.org/downloads/).
+
+Git можно установить через команду:
+
+```bash
+xcode-select --install
+```
+
+После установки проверьте:
+
+```bash
+python3 --version
+git --version
+```
+
+### Linux или WSL на Windows
+
+Для Windows удобнее всего использовать WSL с Ubuntu, потому что учебные скрипты
+запускаются через `bash`.
+
+В Ubuntu выполните:
+
+```bash
+sudo apt update
+sudo apt install -y git python3 python3-venv python3-pip
+```
+
+Проверьте:
+
+```bash
+python3 --version
+git --version
+```
+
+Если обе команды печатают версии, можно переходить дальше.
+
+## Как скачать репозиторий
+
+Откройте терминал и выполните:
 
 ```bash
 git clone https://github.com/chepalina/sympy-sirius-light.git
 cd sympy-sirius-light
 ```
 
-Переключитесь на нужную ветку и установите локальное окружение:
+После клонирования вы будете в ветке `master`. В ней лежат общие инструкции.
+Учебные файлы для работы появляются после переключения на учебную ветку.
+
+## Как подготовить окружение
+
+Переключитесь на bug-ветку:
 
 ```bash
 git switch sirius-light-buggy
+```
+
+Теперь в репозитории должны быть видны:
+
+```text
+bugs_cards/
+sirius_tests/
+scripts/
+```
+
+Запустите настройку окружения:
+
+```bash
 ./scripts/setup_sirius.sh
 ```
 
-Скрипт ставит текущую ветку SymPy в editable-режиме и создает виртуальное
-окружение рядом с папкой репозитория: `../.venv`. Команды ниже можно запускать
-через `../.venv/bin/python`, не активируя окружение вручную.
+Скрипт создаст виртуальное окружение рядом с репозиторием:
+
+```text
+../.venv
+```
+
+Обычно активировать его вручную не нужно. В командах ниже используется готовый
+Python из этого окружения:
+
+```bash
+../.venv/bin/python
+```
 
 Если вы переключились на другую ветку, запустите `./scripts/setup_sirius.sh`
-еще раз, чтобы окружение смотрело на код текущей ветки.
+еще раз.
 
-## Что такое SymPy
+## Структура учебных файлов
 
-SymPy - это Python-библиотека для символьной математики. В отличие от обычных
-численных вычислений, SymPy умеет работать с формулами как с объектами: упрощать
-выражения, дифференцировать, решать уравнения, работать с матрицами и печатать
-формулы в других форматах.
+Главные папки:
 
-Попробуйте минимальный пример:
+- `sympy/` - код библиотеки SymPy.
+- `bugs_cards/` - карточки багов в ветке `sirius-light-buggy`.
+- `bugs_cards/light_tickets.csv` - тестовый датасет в формате CSV со списком
+  учебных багов.
+- `sirius_tests/` - учебные тесты, которые нужно запускать.
+- `scripts/` - скрипты для настройки окружения и запуска тестов.
+
+В `bugs_cards/` лежат:
+
+- `template.md` - шаблон карточки бага.
+- `01_...md` - `10_...md` - карточки 10 учебных багов.
+- `light_tickets.csv` - исходная таблица с багами.
+
+## Блок 1. Погружение в поведение библиотеки
+
+Сначала попробуйте SymPy как обычную библиотеку.
+
+Пример с производной:
 
 ```bash
 ../.venv/bin/python - <<'PY'
@@ -56,7 +161,7 @@ PY
 x**2*cos(x) + 2*x*sin(x)
 ```
 
-Попробуйте пример с матрицами:
+Пример с матрицей:
 
 ```bash
 ../.venv/bin/python - <<'PY'
@@ -73,154 +178,48 @@ PY
 -2
 ```
 
-## Как устроен этот учебный fork
-
-В этом fork есть две рабочие ветки с одинаковыми учебными тестами:
-
-- `sirius-light-golden` - эталонная версия. Она содержит исправленный код
-  SymPy, и все учебные тесты проходят.
-- `sirius-light-buggy` - рабочая версия для задания. Она содержит 10 внесенных
-  регрессий, и учебные тесты воспроизводят эти баги.
-
-Проверка в обеих ветках запускает только один файл:
+Теперь откройте карточку первого бага:
 
 ```bash
-python -m pytest -q sirius_tests/test_light_bugs.py
+bugs_cards/01_sympy__sympy-18621.md
 ```
 
-Полный тестовый набор SymPy для этого учебного сценария не запускается.
+В карточке есть:
 
-## Блок 1. Погружение команды в поведение библиотеки
+- исходный текст задачи;
+- ручное воспроизведение бага;
+- ожидаемое поведение;
+- команда запуска теста;
+- файлы кода, с которых удобно начать разбор.
 
-Задача команды - увидеть один и тот же пользовательский сценарий в двух
-состояниях: в багованной ветке и в исправленной ветке. Так проще понять, что
-значит "баг" с точки зрения пользователя библиотеки.
+Пройдите по карточке в ветке `sirius-light-buggy`, затем переключитесь на
+`sirius-light-golden` и сравните поведение.
 
-### Пример 1: печать выражения в Mathematica-формате
-
-Сначала воспроизведите баг:
+Для второго примера удобно взять карточку:
 
 ```bash
-git switch sirius-light-buggy
-./scripts/setup_sirius.sh
-../.venv/bin/python - <<'PY'
-from sympy import Max, Min, mathematica_code, symbols
-
-x, y, z = symbols("x y z")
-print(mathematica_code(Max(x, y, z) * Min(y, z)))
-PY
+bugs_cards/09_sympy__sympy-17655.md
 ```
 
-В ветке `sirius-light-buggy` пример падает с ошибкой про неподдержанный `Max`:
-
-```text
-PrintMethodNotImplementedError: Unsupported by ... MCodePrinter ... Max
-```
-
-Теперь сравните с исправленным поведением:
-
-```bash
-git switch sirius-light-golden
-./scripts/setup_sirius.sh
-../.venv/bin/python - <<'PY'
-from sympy import Max, Min, mathematica_code, symbols
-
-x, y, z = symbols("x y z")
-print(mathematica_code(Max(x, y, z) * Min(y, z)))
-PY
-```
-
-Ожидаемый вывод:
-
-```text
-Max[x, y, z]*Min[y, z]
-```
-
-### Пример 2: умножение точки на число
-
-Сначала воспроизведите баг:
-
-```bash
-git switch sirius-light-buggy
-./scripts/setup_sirius.sh
-../.venv/bin/python - <<'PY'
-from sympy import Point
-
-print(5 * Point(1, 1))
-PY
-```
-
-В ветке `sirius-light-buggy` пример падает:
-
-```text
-TypeError: unsupported operand type(s) for *: 'int' and 'Point2D'
-```
-
-Теперь сравните с исправленным поведением:
-
-```bash
-git switch sirius-light-golden
-./scripts/setup_sirius.sh
-../.venv/bin/python - <<'PY'
-from sympy import Point
-
-print(5 * Point(1, 1))
-PY
-```
-
-Ожидаемый вывод:
-
-```text
-Point2D(5, 5)
-```
+На этом этапе не нужно исправлять баги. Задача - увидеть разницу между
+багованным и исправленным поведением.
 
 ## Блок 2. Работа с bug-веткой и тестами
 
-Основная рабочая ветка для задания - `sirius-light-buggy`. В ней баги уже
-внесены, а тесты показывают, какое поведение нужно восстановить.
+Теперь нужно проверить учебные тесты в двух ветках.
 
-Переключитесь на bug-ветку:
+Сначала bug-ветка:
 
 ```bash
 git switch sirius-light-buggy
 ./scripts/setup_sirius.sh
-```
-
-Запустите все учебные тесты:
-
-```bash
 ./scripts/run_sirius_tests.sh
 ```
 
-Ожидаемый результат в начале работы: тесты падают. Это нормально: ветка
-`sirius-light-buggy` специально содержит баги.
+Ожидаемый результат: тесты падают. Это нормально, потому что в
+`sirius-light-buggy` специально внесены баги.
 
-Можно запускать один конкретный тест:
-
-```bash
-../.venv/bin/python -m pytest -q sirius_tests/test_light_bugs.py::test_Function
-```
-
-Или второй пример:
-
-```bash
-../.venv/bin/python -m pytest -q sirius_tests/test_light_bugs.py::test_point
-```
-
-Рабочий цикл команды:
-
-1. Запустить падающий тест в `sirius-light-buggy`.
-2. Прочитать ошибку и понять, какое поведение ожидается.
-3. Найти связанный код в папке `sympy/`.
-4. Исправить код.
-5. Повторно запустить конкретный тест.
-6. Когда конкретный тест проходит, запустить все учебные тесты:
-
-```bash
-./scripts/run_sirius_tests.sh
-```
-
-Для сравнения можно переключиться на эталонную ветку:
+Теперь golden-ветка:
 
 ```bash
 git switch sirius-light-golden
@@ -228,275 +227,37 @@ git switch sirius-light-golden
 ./scripts/run_sirius_tests.sh
 ```
 
-В `sirius-light-golden` все учебные тесты должны проходить.
+Ожидаемый результат: все учебные тесты проходят.
 
----
+## Важные правила
 
-# SymPy
+- Не запускайте полный test suite SymPy.
+- Работайте только с `sirius_tests/test_light_bugs.py`.
+- Для знакомства с багами используйте `bugs_cards/`.
+- Для сравнения исправленного поведения используйте `sirius-light-golden`.
+- Для основной работы с багами используйте `sirius-light-buggy`.
 
-[![pypi version](https://img.shields.io/pypi/v/sympy.svg)](https://pypi.python.org/pypi/sympy)
-[![Join the chat at https://gitter.im/sympy/sympy](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/sympy/sympy?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-[![Zenodo Badge](https://zenodo.org/badge/18918/sympy/sympy.svg)](https://zenodo.org/badge/latestdoi/18918/sympy/sympy)
-[![Downloads](https://pepy.tech/badge/sympy/month)](https://pepy.tech/project/sympy)
-[![GitHub Issues](https://img.shields.io/badge/issue_tracking-github-blue.svg)](https://github.com/sympy/sympy/issues)
-[![Git Tutorial](https://img.shields.io/badge/PR-Welcome-%23FF8300.svg?)](https://git-scm.com/book/en/v2/GitHub-Contributing-to-a-Project)
-[![Powered by NumFocus](https://img.shields.io/badge/powered%20by-NumFOCUS-orange.svg?style=flat&colorA=E1523D&colorB=007D8A)](https://numfocus.org)
-[![Commits since last release](https://img.shields.io/github/commits-since/sympy/sympy/latest.svg?longCache=true&style=flat-square&logo=git&logoColor=fff)](https://github.com/sympy/sympy/releases)
+## Если что-то не работает
 
-[![SymPy Banner](https://github.com/sympy/sympy/raw/master/banner.svg)](https://sympy.org/)
+Если команда `python3 --version` не работает, Python не установлен или не
+добавлен в PATH.
 
+Если команда `git --version` не работает, Git не установлен.
 
-See the [AUTHORS](https://github.com/sympy/sympy/blob/master/AUTHORS) file for the list of authors.
+Если папки `bugs_cards/` или `scripts/` не видны, проверьте ветку:
 
-And many more people helped on the SymPy mailing list, reported bugs,
-helped organize SymPy's participation in the Google Summer of Code, the
-Google Highly Open Participation Contest, Google Code-In, wrote and
-blogged about SymPy...
-
-License: New BSD License (see the [LICENSE](https://github.com/sympy/sympy/blob/master/LICENSE) file for details) covers all
-files in the sympy repository unless stated otherwise.
-
-Our mailing list is at
-<https://groups.google.com/forum/?fromgroups#!forum/sympy>.
-
-We have a community chat at [Gitter](https://gitter.im/sympy/sympy). Feel
-free to ask us anything there. We have a very welcoming and helpful
-community.
-
-## Download
-
-The recommended installation method is through Anaconda,
-<https://www.anaconda.com/products/distribution>
-
-You can also get the latest version of SymPy from
-<https://pypi.python.org/pypi/sympy/>
-
-To get the git version do
-
-    $ git clone https://github.com/sympy/sympy.git
-
-For other options (tarballs, debs, etc.), see
-<https://docs.sympy.org/dev/install.html>.
-
-## Documentation and Usage
-
-For in-depth instructions on installation and building the
-documentation, see the [SymPy Documentation Style Guide](https://docs.sympy.org/dev/documentation-style-guide.html).
-
-Everything is at:
-
-<https://docs.sympy.org/>
-
-You can generate everything at the above site in your local copy of
-SymPy by:
-
-    $ cd doc
-    $ make html
-
-Then the docs will be in <span class="title-ref">\_build/html</span>. If
-you don't want to read that, here is a short usage:
-
-From this directory, start Python and:
-
-``` python
->>> from sympy import Symbol, cos
->>> x = Symbol('x')
->>> e = 1/cos(x)
->>> print(e.series(x, 0, 10))
-1 + x**2/2 + 5*x**4/24 + 61*x**6/720 + 277*x**8/8064 + O(x**10)
+```bash
+git branch --show-current
 ```
 
-SymPy also comes with a console that is a simple wrapper around the
-classic python console (or IPython when available) that loads the SymPy
-namespace and executes some common commands for you.
+Нужно переключиться на:
 
-To start it, issue:
-
-    $ bin/isympy
-
-from this directory, if SymPy is not installed or simply:
-
-    $ isympy
-
-if SymPy is installed.
-
-## Installation
-
-To install SymPy using PyPI, run the following command:
-
-    $ pip install sympy
-
-To install SymPy using Anaconda, run the following command:
-
-    $ conda install -c anaconda sympy
-
-To install SymPy from GitHub source, first clone SymPy using `git`:
-
-    $ git clone https://github.com/sympy/sympy.git
-
-Then, in the `sympy` repository that you cloned, simply run:
-
-    $ pip install .
-
-See <https://docs.sympy.org/dev/install.html> for more information.
-
-## Contributing
-
-We welcome contributions from anyone, even if you are new to open
-source. Please read our [Contributor Guide](https://docs.sympy.org/dev/contributing/index.html)
-page and the [SymPy Documentation Style Guide](https://docs.sympy.org/dev/documentation-style-guide.html). If you
-are new and looking for some way to contribute, a good place to start is
-to look at the issues tagged [Easy to Fix](https://github.com/sympy/sympy/issues?q=is%3Aopen+is%3Aissue+label%3A%22Easy+to+Fix%22).
-
-Please note that all participants in this project are expected to follow
-our Code of Conduct. By participating in this project you agree to abide
-by its terms. See [CODE\_OF\_CONDUCT.md](CODE_OF_CONDUCT.md).
-
-## Tests
-
-To execute all tests, run:
-
-    $./setup.py test
-
-in the current directory.
-
-For the more fine-grained running of tests or doctests, use `bin/test`
-or respectively `bin/doctest`. The master branch is automatically tested
-by GitHub Actions.
-
-To test pull requests, use
-[sympy-bot](https://github.com/sympy/sympy-bot).
-
-## Regenerate Experimental <span class="title-ref">LaTeX</span> Parser/Lexer
-
-The parser and lexer were generated with the [ANTLR4](http://antlr4.org)
-toolchain in `sympy/parsing/latex/_antlr` and checked into the repo.
-Presently, most users should not need to regenerate these files, but
-if you plan to work on this feature, you will need the `antlr4`
-command-line tool (and you must ensure that it is in your `PATH`).
-One way to get it is:
-
-    $ conda install -c conda-forge antlr=4.11.1
-
-Alternatively, follow the instructions on the ANTLR website and download
-the `antlr-4.11.1-complete.jar`. Then export the `CLASSPATH` as instructed
-and instead of creating `antlr4` as an alias, make it an executable file
-with the following contents:
-``` bash
-#!/bin/bash
-java -jar /usr/local/lib/antlr-4.11.1-complete.jar "$@"
+```bash
+git switch sirius-light-buggy
 ```
 
-After making changes to `sympy/parsing/latex/LaTeX.g4`, run:
+Если после переключения ветки тесты ведут себя странно, повторите настройку:
 
-    $ ./setup.py antlr
-
-## Clean
-
-To clean everything (thus getting the same tree as in the repository):
-
-    $ git clean -Xdf
-
-which will clear everything ignored by `.gitignore`, and:
-
-    $ git clean -df
-
-to clear all untracked files. You can revert the most recent changes in
-git with:
-
-    $ git reset --hard
-
-WARNING: The above commands will all clear changes you may have made,
-and you will lose them forever. Be sure to check things with `git
-status`, `git diff`, `git clean -Xn`, and `git clean -n` before doing any
-of those.
-
-## Bugs
-
-Our issue tracker is at <https://github.com/sympy/sympy/issues>. Please
-report any bugs that you find. Or, even better, fork the repository on
-GitHub and create a pull request. We welcome all changes, big or small,
-and we will help you make the pull request if you are new to git (just
-ask on our mailing list or Gitter Channel). If you further have any queries, you can find answers
-on Stack Overflow using the [sympy](https://stackoverflow.com/questions/tagged/sympy) tag.
-
-## Brief History
-
-SymPy was started by Ondřej Čertík in 2005, he wrote some code during
-the summer, then he wrote some more code during summer 2006. In February
-2007, Fabian Pedregosa joined the project and helped fix many things,
-contributed documentation, and made it alive again. 5 students (Mateusz
-Paprocki, Brian Jorgensen, Jason Gedge, Robert Schwarz, and Chris Wu)
-improved SymPy incredibly during summer 2007 as part of the Google
-Summer of Code. Pearu Peterson joined the development during the summer
-2007 and he has made SymPy much more competitive by rewriting the core
-from scratch, which has made it from 10x to 100x faster. Jurjen N.E. Bos
-has contributed pretty-printing and other patches. Fredrik Johansson has
-written mpmath and contributed a lot of patches.
-
-SymPy has participated in every Google Summer of Code since 2007. You
-can see <https://github.com/sympy/sympy/wiki#google-summer-of-code> for
-full details. Each year has improved SymPy by bounds. Most of SymPy's
-development has come from Google Summer of Code students.
-
-In 2011, Ondřej Čertík stepped down as lead developer, with Aaron
-Meurer, who also started as a Google Summer of Code student, taking his
-place. Ondřej Čertík is still active in the community but is too busy
-with work and family to play a lead development role.
-
-Since then, a lot more people have joined the development and some
-people have also left. You can see the full list in [AUTHORS](https://github.com/sympy/sympy/blob/master/AUTHORS).
-
-The git history goes back to 2007 when development moved from svn to hg.
-To see the history before that point, look at
-<https://github.com/sympy/sympy-old>.
-
-You can use git to see the biggest developers. The command:
-
-    $ git shortlog -ns
-
-will show each developer, sorted by commits to the project. The command:
-
-    $ git shortlog -ns --since="1 year"
-
-will show the top developers from the last year.
-
-## Citation
-
-To cite SymPy in publications use
-
-> Meurer A, Smith CP, Paprocki M, Čertík O, Kirpichev SB, Rocklin M,
-> Kumar A, Ivanov S, Moore JK, Singh S, Rathnayake T, Vig S, Granger BE,
-> Muller RP, Bonazzi F, Gupta H, Vats S, Johansson F, Pedregosa F, Curry
-> MJ, Terrel AR, Roučka Š, Saboo A, Fernando I, Kulal S, Cimrman R,
-> Scopatz A. (2017) SymPy: symbolic computing in Python. *PeerJ Computer
-> Science* 3:e103 <https://doi.org/10.7717/peerj-cs.103>
-
-A BibTeX entry for LaTeX users is
-
-``` bibtex
-@article{10.7717/peerj-cs.103,
- title = {SymPy: symbolic computing in Python},
- author = {Meurer, Aaron and Smith, Christopher P. and Paprocki, Mateusz and \v{C}ert\'{i}k, Ond\v{r}ej and Kirpichev, Sergey B. and Rocklin, Matthew and Kumar, Amit and Ivanov, Sergiu and Moore, Jason K. and Singh, Sartaj and Rathnayake, Thilina and Vig, Sean and Granger, Brian E. and Muller, Richard P. and Bonazzi, Francesco and Gupta, Harsh and Vats, Shivam and Johansson, Fredrik and Pedregosa, Fabian and Curry, Matthew J. and Terrel, Andy R. and Rou\v{c}ka, \v{S}t\v{e}p\'{a}n and Saboo, Ashutosh and Fernando, Isuru and Kulal, Sumith and Cimrman, Robert and Scopatz, Anthony},
- year = 2017,
- month = Jan,
- keywords = {Python, Computer algebra system, Symbolics},
- abstract = {
-            SymPy is an open-source computer algebra system written in pure Python. It is built with a focus on extensibility and ease of use, through both interactive and programmatic applications. These characteristics have led SymPy to become a popular symbolic library for the scientific Python ecosystem. This paper presents the architecture of SymPy, a description of its features, and a discussion of select submodules. The supplementary material provides additional examples and further outlines details of the architecture and features of SymPy.
-         },
- volume = 3,
- pages = {e103},
- journal = {PeerJ Computer Science},
- issn = {2376-5992},
- url = {https://doi.org/10.7717/peerj-cs.103},
- doi = {10.7717/peerj-cs.103}
-}
+```bash
+./scripts/setup_sirius.sh
 ```
-
-SymPy is BSD licensed, so you are free to use it whatever you like, be
-it academic, commercial, creating forks or derivatives, as long as you
-copy the BSD statement if you redistribute it (see the LICENSE file for
-details). That said, although not required by the SymPy license, if it
-is convenient for you, please cite SymPy when using it in your work and
-also consider contributing all your changes back, so that we can
-incorporate it and all of us will benefit in the end.
