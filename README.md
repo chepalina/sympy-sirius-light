@@ -1,3 +1,55 @@
+# Sirius SymPy Light
+
+Исходное описание проекта SymPy находится в оригинальном README:
+[sympy/sympy README.md](https://github.com/sympy/sympy/blob/master/README.md).
+
+Этот fork подготовлен для учебного задания Sirius SWE-bench Light. В нем есть
+две рабочие ветки с одинаковым набором Sirius-тестов:
+
+- `sirius-light-golden` - эталонная версия. Ветка содержит исправленный код
+  SymPy, и все Sirius light тесты проходят.
+- `sirius-light-buggy` - версия для задания. Ветка содержит 10 внесенных
+  регрессий, и Sirius light тесты воспроизводят эти баги.
+
+Проверка в обеих ветках запускает только один файл:
+
+```bash
+python -m pytest -q sirius_tests/test_light_bugs.py
+```
+
+Полный тестовый набор SymPy для этого учебного сценария не запускается.
+
+## Локальный запуск
+
+Клонировать репозиторий:
+
+```bash
+git clone https://github.com/chepalina/sympy-sirius-light.git
+cd sympy-sirius-light
+```
+
+Проверить эталонную ветку:
+
+```bash
+git switch sirius-light-golden
+./scripts/setup_sirius.sh
+./scripts/run_sirius_tests.sh
+```
+
+Ожидаемый результат: все Sirius-тесты проходят.
+
+Проверить buggy-ветку:
+
+```bash
+git switch sirius-light-buggy
+./scripts/setup_sirius.sh
+./scripts/run_sirius_tests.sh
+```
+
+Ожидаемый результат: Sirius-тесты падают и показывают воспроизводимые баги.
+
+---
+
 # SymPy
 
 [![pypi version](https://img.shields.io/pypi/v/sympy.svg)](https://pypi.python.org/pypi/sympy)
