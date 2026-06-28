@@ -1,10 +1,81 @@
 # Sirius SymPy Light
 
+Это методическое пособие для первых дней погружения школьников в проект.
+Его цель - быстро познакомить участников с библиотекой SymPy, показать, как
+выглядит пользовательское поведение библиотеки, и затем перейти к работе с
+реальными багами: воспроизвести ошибку, сравнить ее с исправленным поведением и
+запустить проверочные тесты.
+
 Исходное описание проекта SymPy находится в оригинальном README:
 [sympy/sympy README.md](https://github.com/sympy/sympy/blob/master/README.md).
 
-Этот fork подготовлен для учебного задания Sirius SWE-bench Light. В нем есть
-две рабочие ветки с одинаковым набором Sirius-тестов:
+## Подготовка окружения
+
+Клонируйте репозиторий:
+
+```bash
+git clone https://github.com/chepalina/sympy-sirius-light.git
+cd sympy-sirius-light
+```
+
+Переключитесь на нужную ветку и установите локальное окружение:
+
+```bash
+git switch sirius-light-buggy
+./scripts/setup_sirius.sh
+```
+
+Скрипт ставит текущую ветку SymPy в editable-режиме и создает виртуальное
+окружение рядом с папкой репозитория: `../.venv`. Примеры ниже можно запускать
+через `../.venv/bin/python`, не активируя окружение вручную.
+
+Если вы переключились на другую ветку, запустите `./scripts/setup_sirius.sh`
+еще раз, чтобы окружение смотрело на код текущей ветки.
+
+## Что такое SymPy
+
+SymPy - это Python-библиотека для символьной математики. В отличие от обычных
+численных вычислений, SymPy умеет работать с формулами как с объектами: упрощать
+выражения, дифференцировать, решать уравнения, работать с матрицами и печатать
+формулы в других форматах.
+
+Минимальный пример:
+
+```bash
+../.venv/bin/python - <<'PY'
+from sympy import diff, sin, symbols
+
+x = symbols("x")
+print(diff(sin(x) * x**2, x))
+PY
+```
+
+Ожидаемый вывод:
+
+```text
+x**2*cos(x) + 2*x*sin(x)
+```
+
+Еще один маленький пример с матрицами:
+
+```bash
+../.venv/bin/python - <<'PY'
+from sympy import Matrix
+
+matrix = Matrix([[1, 2], [3, 4]])
+print(matrix.det())
+PY
+```
+
+Ожидаемый вывод:
+
+```text
+-2
+```
+
+## Как устроен этот учебный fork
+
+В этом fork есть две рабочие ветки с одинаковыми Sirius-тестами:
 
 - `sirius-light-golden` - эталонная версия. Ветка содержит исправленный код
   SymPy, и все Sirius light тесты проходят.
@@ -19,53 +90,18 @@ python -m pytest -q sirius_tests/test_light_bugs.py
 
 Полный тестовый набор SymPy для этого учебного сценария не запускается.
 
-## Локальный запуск
+## Блок 1. Продуктовое погружение: поведение библиотеки
 
-Клонировать репозиторий:
+Задача этого блока - увидеть один и тот же пользовательский сценарий в двух
+состояниях: в багованной ветке и в исправленной ветке.
 
-```bash
-git clone https://github.com/chepalina/sympy-sirius-light.git
-cd sympy-sirius-light
-```
+### Пример 1: печать выражения в Mathematica-формате
 
-Проверить эталонную ветку:
-
-```bash
-git switch sirius-light-golden
-./scripts/setup_sirius.sh
-./scripts/run_sirius_tests.sh
-```
-
-Ожидаемый результат: все Sirius-тесты проходят.
-
-Проверить buggy-ветку:
+Сначала воспроизведите баг:
 
 ```bash
 git switch sirius-light-buggy
 ./scripts/setup_sirius.sh
-./scripts/run_sirius_tests.sh
-```
-
-Ожидаемый результат: Sirius-тесты падают и показывают воспроизводимые баги.
-
-## Ручное воспроизведение двух багов
-
-Сначала разверните окружение в нужной ветке:
-
-```bash
-git switch sirius-light-buggy
-./scripts/setup_sirius.sh
-```
-
-Скрипт ставит текущую ветку SymPy в editable-режиме и создает виртуальное
-окружение рядом с папкой репозитория: `../.venv`. Примеры ниже можно запускать
-через `../.venv/bin/python`, не активируя окружение вручную.
-
-### Баг 1: Mathematica printer не умеет печатать `Max` и `Min`
-
-Пример использования библиотеки:
-
-```bash
 ../.venv/bin/python - <<'PY'
 from sympy import Max, Min, mathematica_code, symbols
 
@@ -80,7 +116,7 @@ PY
 PrintMethodNotImplementedError: Unsupported by ... MCodePrinter ... Max
 ```
 
-В ветке `sirius-light-golden` тот же пример работает:
+Теперь сравните с исправленным поведением:
 
 ```bash
 git switch sirius-light-golden
@@ -99,9 +135,9 @@ PY
 Max[x, y, z]*Min[y, z]
 ```
 
-### Баг 2: `Point` нельзя умножить на число слева
+### Пример 2: умножение точки на число
 
-Пример использования библиотеки:
+Сначала воспроизведите баг:
 
 ```bash
 git switch sirius-light-buggy
@@ -119,7 +155,7 @@ PY
 TypeError: unsupported operand type(s) for *: 'int' and 'Point2D'
 ```
 
-В ветке `sirius-light-golden` тот же пример работает:
+Теперь сравните с исправленным поведением:
 
 ```bash
 git switch sirius-light-golden
@@ -136,6 +172,62 @@ PY
 ```text
 Point2D(5, 5)
 ```
+
+## Блок 2. Работа с bug-веткой и тестами
+
+Основная рабочая ветка для задания - `sirius-light-buggy`. В ней баги уже
+внесены, а тесты показывают, какое поведение нужно восстановить.
+
+Переключитесь на bug-ветку:
+
+```bash
+git switch sirius-light-buggy
+./scripts/setup_sirius.sh
+```
+
+Запустите все Sirius-тесты:
+
+```bash
+./scripts/run_sirius_tests.sh
+```
+
+Ожидаемый результат в начале работы: тесты падают. Это нормально для
+`sirius-light-buggy`, потому что ветка специально содержит баги.
+
+Можно запускать один конкретный тест:
+
+```bash
+../.venv/bin/python -m pytest -q sirius_tests/test_light_bugs.py::test_Function
+```
+
+Или второй пример:
+
+```bash
+../.venv/bin/python -m pytest -q sirius_tests/test_light_bugs.py::test_point
+```
+
+Типичный цикл работы:
+
+1. Запустить падающий тест в `sirius-light-buggy`.
+2. Прочитать ошибку и понять, какое поведение ожидается.
+3. Найти связанный код в папке `sympy/`.
+4. Исправить код.
+5. Повторно запустить конкретный тест.
+6. Когда конкретный тест проходит, запустить все Sirius-тесты:
+
+```bash
+./scripts/run_sirius_tests.sh
+```
+
+Для сравнения можно переключиться на эталонную ветку:
+
+```bash
+git switch sirius-light-golden
+./scripts/setup_sirius.sh
+./scripts/run_sirius_tests.sh
+```
+
+В `sirius-light-golden` все Sirius-тесты должны проходить.
 
 ---
 
