@@ -617,7 +617,7 @@ class Abs(DefinedFunction):
             if arg2.is_extended_nonnegative:
                 return arg2
         if arg.is_extended_real:
-            return
+            return sqrt(expand_mul(arg*arg))
         # reject result if all new conjugates are just wrappers around
         # an expression that was already in the arg
         conj = signsimp(arg.conjugate(), evaluate=False)

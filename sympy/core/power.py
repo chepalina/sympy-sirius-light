@@ -163,6 +163,8 @@ class Pow(Expr):
                 )
 
         if evaluate:
+            if base is S.Zero and exp is S.NegativeInfinity:
+                return S.Zero
             if exp is S.ComplexInfinity:
                 return S.NaN
             if exp is S.Infinity:

@@ -153,7 +153,7 @@ class Point(GeometryEntity):
                         'warn' or 'ignore'.'''))
         if any(coords[dim:]):
             raise ValueError('Nonzero coordinates cannot be removed.')
-        if any(a.is_number and im(a).is_zero is False for a in coords):
+        if any(a.is_number and im(a) for a in coords):
             raise ValueError('Imaginary coordinates are not permitted.')
         if not all(isinstance(a, Expr) for a in coords):
             raise TypeError('Coordinates must be valid SymPy expressions.')
@@ -279,10 +279,6 @@ class Point(GeometryEntity):
         factor = sympify(factor)
         coords = [simplify(x*factor) for x in self.args]
         return Point(coords, evaluate=False)
-
-    def __rmul__(self, factor):
-        """Multiply a factor by point's coordinates."""
-        return self.__mul__(factor)
 
     def __neg__(self):
         """Negate the point."""

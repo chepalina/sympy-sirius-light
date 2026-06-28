@@ -43,8 +43,6 @@ known_functions = {
     "acsch": [(lambda x: True, "ArcCsch")],
     "sinc": [(lambda x: True, "Sinc")],
     "conjugate": [(lambda x: True, "Conjugate")],
-    "Max": [(lambda *x: True, "Max")],
-    "Min": [(lambda *x: True, "Min")],
     "erf": [(lambda x: True, "Erf")],
     "erf2": [(lambda *x: True, "Erf")],
     "erfc": [(lambda x: True, "Erfc")],
@@ -309,8 +307,6 @@ class MCodePrinter(CodePrinter):
                 return self._print(expr.rewrite(target_f))
         return expr.func.__name__ + "[%s]" % self.stringify(expr.args, ", ")
 
-    _print_MinMaxBase = _print_Function
-
     def _print_LambertW(self, expr):
         if len(expr.args) == 1:
             return "ProductLog[{}]".format(self._print(expr.args[0]))
@@ -330,12 +326,6 @@ class MCodePrinter(CodePrinter):
 
     def _print_Sum(self, expr):
         return "Hold[Sum[" + ', '.join(self.doprint(a) for a in expr.args) + "]]"
-
-    def _print_Derivative(self, expr):
-        dexpr = expr.expr
-        dvars = [i[0] if i[1] == 1 else i for i in expr.variable_count]
-        return "Hold[D[" + ', '.join(self.doprint(a) for a in [dexpr] + dvars) + "]]"
-
 
     def _get_comment(self, text):
         return "(* {} *)".format(text)
