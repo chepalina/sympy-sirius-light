@@ -16,6 +16,9 @@
   в ветке `sirius-light-buggy`.
 - `bugs_cards/light_tickets.csv` - тестовый датасет в формате CSV со списком
   учебных багов.
+- `bugs_cards/light_tickets_input.csv` - сокращенный CSV для агента, который
+  получает только `instance_id`, `title`, `ticket_description`,
+  `expected_fail_to_pass_tests` и `test_files`.
 - `sirius_tests/` - тесты, которые нужно запускать на этом этапе.
 - `scripts/` - команды для настройки окружения и запуска учебных тестов.
 
@@ -72,6 +75,8 @@ bugs_cards/
 В ней лежат:
 
 - `light_tickets.csv` - исходная таблица с 10 учебными багами.
+- `light_tickets_input.csv` - входной файл для агента автоматического поиска и
+  исправления багов.
 - `template.md` - шаблон карточки бага.
 - `01_...md` - `10_...md` - готовые карточки по всем багам.
 
