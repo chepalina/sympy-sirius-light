@@ -215,7 +215,7 @@ class AntiSymmetricTensor(TensorSymbol):
             return TensorSymbol.__new__(cls, symbol, upper, lower)
 
     def _latex(self, printer):
-        return "{%s^{%s}_{%s}}" % (
+        return "%s^{%s}_{%s}" % (
             self.symbol,
             "".join([ printer._print(i) for i in self.args[1]]),
             "".join([ printer._print(i) for i in self.args[2]])
@@ -456,9 +456,9 @@ class CreateBoson(BosonicOperator, Creator):
 
     def _latex(self, printer):
         if self.state is S.Zero:
-            return "{b^\\dagger_{0}}"
+            return "b^\\dagger_{0}"
         else:
-            return "{b^\\dagger_{%s}}" % printer._print(self.state)
+            return "b^\\dagger_{%s}" % printer._print(self.state)
 
 B = AnnihilateBoson
 Bd = CreateBoson
@@ -923,9 +923,9 @@ class CreateFermion(FermionicOperator, Creator):
 
     def _latex(self, printer):
         if self.state is S.Zero:
-            return "{a^\\dagger_{0}}"
+            return "a^\\dagger_{0}"
         else:
-            return "{a^\\dagger_{%s}}" % printer._print(self.state)
+            return "a^\\dagger_{%s}" % printer._print(self.state)
 
 Fd = CreateFermion
 F = AnnihilateFermion

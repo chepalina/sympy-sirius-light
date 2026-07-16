@@ -757,6 +757,14 @@ def _det_bareiss(
     http://www.eecis.udel.edu/~saunders/papers/sffge/it5.ps.
     """
 
+    # XXX included as a workaround for issue #12362.  Should use
+    # _find_reasonable_pivot instead.
+    def _find_pivot(values):
+        for pos, value in enumerate(values):
+            if value:
+                return pos, value, None, None
+        return None, None, None, None
+
     # Recursively implemented Bareiss' algorithm as per Deanna Richelle Leggett's
     # thesis https://aquila.usm.edu/cgi/viewcontent.cgi?article=1001&context=masters_theses
     def bareiss(mat: MatrixBase, cumm: Expr = S.One):
@@ -766,10 +774,8 @@ def _det_bareiss(
             return mat[0, 0]
 
         # find a pivot and extract the remaining matrix
-        # With the default iszerofunc, _find_reasonable_pivot slows down
-        # the computation by the factor of 2.5 in one test.
-        # Relevant issues: #10279 and #13877.
-        pivot_pos, pivot_val, _, _ = _find_reasonable_pivot(mat[:, 0].flat(), iszerofunc=iszerofunc)
+        # XXX should use _find_reasonable_pivot.  Blocked by issue #12362.
+        pivot_pos, pivot_val, _, _ = _find_pivot(mat[:, 0].flat())
         if pivot_pos is None or pivot_val is None:
             return mat.zero
 
@@ -784,10 +790,8 @@ def _det_bareiss(
 
         def entry(i, j):
             ret = (pivot_val*tmp_mat[i, j + 1] - mat[pivot_pos, j + 1]*tmp_mat[i, 0]) / cumm
-            if _get_intermediate_simp_bool(True):
-                return _dotprodsimp(ret)
-            elif not ret.is_Atom:
-                return cancel(ret)
+            if not ret.is_Atom:
+                cancel(ret)
             return ret
 
         return sign*bareiss(M._new(mat.rows - 1, mat.cols - 1, entry), pivot_val)

@@ -1092,6 +1092,8 @@ def nthroot_mod(
         return [ai] if all_roots else ai
     if ni == 2:
         return sqrt_mod(ai, pi, all_roots)
+    if not isprime(pi):
+        raise NotImplementedError("Not implemented for composite p")
 
     base: list[list[MPZ]] = []
     prime_power: list[MPZ] = []

@@ -107,7 +107,7 @@ def _polifyit(func):
 
 
 @public
-class Poly(Basic):
+class Poly(Expr):
     """
     Generic class for representing and operating on polynomial expressions.
 
@@ -165,7 +165,6 @@ class Poly(Basic):
 
     is_commutative = True
     is_Poly = True
-    _op_priority = 10.001
 
     rep: DMP
     gens: tuple[Expr, ...]

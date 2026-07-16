@@ -252,14 +252,6 @@ class ArcsinDistribution(SingleContinuousDistribution):
         a, b = self.a, self.b
         return 1/(pi*sqrt((x - a)*(b - x)))
 
-    def _cdf(self, x):
-        a, b = self.a, self.b
-        return Piecewise(
-            (S.Zero, x < a),
-            (2*asin(sqrt((x - a)/(b - a)))/pi, x <= b),
-            (S.One, True))
-
-
 def Arcsin(name, a=0, b=1):
     r"""
     Create a Continuous Random Variable with an arcsin distribution.

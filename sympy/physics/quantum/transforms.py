@@ -294,8 +294,7 @@ Basic._constructor_postprocessor_mapping[StateBase] = {
 }
 
 Basic._constructor_postprocessor_mapping[TensorProduct] = {
-    "Mul": [_postprocess_state_mul],
-    "Pow": [_postprocess_tp_pow]
+    "Mul": [_postprocess_state_mul]
 }
 
 Basic._constructor_postprocessor_mapping[Operator] = {
