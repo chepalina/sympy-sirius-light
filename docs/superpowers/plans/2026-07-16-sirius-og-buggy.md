@@ -660,7 +660,7 @@ Expected pytest result: `10 failed, 55 deselected`.
 20801 sympy/core/numbers.py test_zero_not_false
 24661 sympy/parsing/sympy_parser.py test_issue_24288
 19783 sympy/physics/quantum/transforms.py (historical dagger.py/operator.py behavior) test_dagger_mul, test_identity
-19040 sympy/polys/factortools.py test_issue_5786
+19040 sympy/polys/factortools.py and sympy/polys/sqfreetools.py test_issue_5786
 21379 sympy/core/mod.py test_Mod
 ```
 
@@ -675,6 +675,8 @@ Expected: `10 passed, 55 deselected`.
 - [ ] **Step 2: Apply or transpose inverse patches one production path at a time**
 
 Run these commands separately, use rejected hunks as the exact old-behavior specification, and edit only the paths listed above. For `19783`, the two historical class-local `__mul__` implementations were replaced by the dispatcher in `sympy/physics/quantum/transforms.py`. Restore the old Dagger/Identity interaction there by registering the two specific `(IdentityOperator, Dagger)` and `(Dagger, IdentityOperator)` pairs as no-transform cases; do not re-add class-local hooks that are bypassed by the constructor postprocessor. Keep the two `19783` checks separate and verify both.
+
+For `19040`, the metadata patch is inconsistent with its declared base commit: that commit already calls `dmp_sqf_norm(f, ...)`, so reversing only the recorded line is not observable on current SymPy. Reproduce the actual historical base behavior that makes `test_issue_5786` fail: in `dmp_sqf_part` restore the old main-generator-only derivative/GCD instead of iterating over every generator, and in `dmp_ext_factor` remove the later `_dmp_check_degrees(F, u, result)` safeguard. The high-level factorization must then return `x - I*y`, losing the second factor, rather than fail through an internal assertion or hang on a non-square-free norm.
 
 ```bash
 git apply -R --reject --whitespace=nowarn /private/tmp/sympy__sympy-18211.patch
