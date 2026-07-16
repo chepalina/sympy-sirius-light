@@ -464,15 +464,6 @@ def test_og_24661_test_issue_24288():
         assert parse_expr(text, evaluate=False) == result
 
 
-def test_og_18763_test_latex_subs():
-    from sympy import Subs, latex, symbols
-
-    x, y = symbols("x y")
-    assert latex(Subs(x*y, (x, y), (1, 2))) == (
-        r"\left. x y \right|_{\substack{ x=1\\ y=2 }}"
-    )
-
-
 def test_og_19783_test_dagger_mul():
     from sympy import Mul
     from sympy.physics.quantum.dagger import Dagger

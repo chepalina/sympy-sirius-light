@@ -2,9 +2,9 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Build `sirius-og-buggy` with all 55 SWE-bench OG regressions reproducible by 66 targeted pytest checks.
+**Goal:** Build `sirius-og-buggy` with all 54 SWE-bench OG regressions reproducible by 65 targeted pytest checks.
 
-**Architecture:** Keep the complete SymPy checkout at `sympy-sirius-light/og-buggy` and the student dataset inside its `bugs_cards/` directory. Derive checks from the official `test_patch`/`FAIL_TO_PASS` records, prove all 66 checks pass on the unmodified base, then reverse or semantically adapt the 55 production patches so every targeted check fails for the intended reason. Fifteen reverse patches apply directly; forty require adaptation to SymPy 1.15.0.dev.
+**Architecture:** Keep the complete SymPy checkout at `sympy-sirius-light/og-buggy` and the student dataset inside its `bugs_cards/` directory. Derive checks from the official `test_patch`/`FAIL_TO_PASS` records, prove all 65 checks pass on the unmodified base, then reverse or semantically adapt the 54 production patches so every targeted check fails for the intended reason. Fifteen reverse patches apply directly; thirty-nine require adaptation to SymPy 1.15.0.dev.
 
 **Tech Stack:** Python 3.11+, SymPy 1.15.0.dev, pytest, hypothesis, Bash, Git worktrees, official SWE-bench JSONL.
 
@@ -12,13 +12,13 @@
 
 ## File map
 
-- Create `bugs_cards/sympy_og_tickets.csv`: unchanged 55-row dataset copied from the benchmark repository.
+- Create `bugs_cards/sympy_og_tickets.csv`: unchanged 54-row dataset copied from the benchmark repository.
 - Create `bugs_cards/sympy_og_tickets_input.csv`: five-column student/agent input.
 - Create `bugs_cards/template.md`: same concise card template used by `sirius-light-buggy`.
-- Create `sirius_tests/test_sympy_og_bugs.py`: 66 targeted regression checks covering all 55 `instance_id` values.
+- Create `sirius_tests/test_sympy_og_bugs.py`: 65 targeted regression checks covering all 54 `instance_id` values.
 - Create `scripts/setup_sirius.sh`: local virtual-environment setup.
 - Create `scripts/run_sirius_tests.sh`: targeted buggy-suite runner.
-- Modify the 55 production paths named by `patch_files`; no two tasks share the same production path.
+- Modify the 54 production paths named by `patch_files`; no two tasks share the same production path.
 - Do not copy `sympy_og_tickets_full.jsonl` into this branch because it contains answer patches.
 
 The immutable sources are:
@@ -45,7 +45,7 @@ git status --short --branch
 shasum -a 256 /Users/family/Documents/Сириус/sirius-swebench-light/sirius_benchmark/tickets/sympy_og_tickets.csv
 ```
 
-Expected protected state: master has only `M README.md`; `sirius-light-buggy` has only the pre-existing untracked `bugs_cards/sympy_og_tickets.csv`; `sirius-light-golden` is clean; `sirius-og-buggy` is clean. Expected source hash: `37be1ef140bfdc9d112b54599c92629100a58a816de9eac596a5a51ce93b667e`.
+Expected protected state: master has only `M README.md`; `sirius-light-buggy` has only the pre-existing untracked `bugs_cards/sympy_og_tickets.csv`; `sirius-light-golden` is clean; `sirius-og-buggy` is clean. Expected source hash: `68722a795bf86a81d313073c239aecbc29c6baeda4949eec2eaaea3fe41ffe63`.
 
 - [ ] **Step 2: Copy the source CSV and template mechanically**
 
@@ -82,11 +82,11 @@ root=pathlib.Path("bugs_cards")
 full=list(csv.DictReader((root/"sympy_og_tickets.csv").open(encoding="utf-8",newline="")))
 agent=list(csv.DictReader((root/"sympy_og_tickets_input.csv").open(encoding="utf-8",newline="")))
 fields=["instance_id","title","ticket_description","expected_fail_to_pass_tests","test_files"]
-assert len(full)==len(agent)==55
-assert len({row["instance_id"] for row in full})==55
+assert len(full)==len(agent)==54
+assert len({row["instance_id"] for row in full})==54
 assert list(agent[0])==fields
 assert [row["instance_id"] for row in full]==[row["instance_id"] for row in agent]
-print("55 dataset rows; 55 agent rows; five-column contract valid")'
+print("54 dataset rows; 54 agent rows; five-column contract valid")'
 cmp /Users/family/Documents/Сириус/sirius-swebench-light/sirius_benchmark/tickets/sympy_og_tickets.csv bugs_cards/sympy_og_tickets.csv
 ```
 
@@ -162,7 +162,7 @@ git add scripts/setup_sirius.sh scripts/run_sirius_tests.sh
 git commit -m "Add SymPy OG test scripts"
 ```
 
-### Task 3: Build the 66-check golden baseline
+### Task 3: Build the 65-check golden baseline
 
 **Files:**
 - Create: `sirius_tests/test_sympy_og_bugs.py`
@@ -170,7 +170,7 @@ git commit -m "Add SymPy OG test scripts"
 
 - [ ] **Step 1: Print the exact official test material for each task**
 
-Use this command with each of the 55 exact IDs from `bugs_cards/sympy_og_tickets.csv`:
+Use this command with each of the 54 exact IDs from `bugs_cards/sympy_og_tickets.csv`:
 
 ```bash
 python3 -c 'import json,pathlib,sys
@@ -208,7 +208,7 @@ def test_og_15809_test_Max():
 
 - [ ] **Step 2: Preserve the complete official check mapping**
 
-The final file must contain one pytest item for each of these 66 mappings:
+The final file must contain one pytest item for each of these 65 mappings:
 
 ```text
 14711: test_Vector
@@ -248,7 +248,6 @@ The final file must contain one pytest item for each of these 66 mappings:
 20801: test_zero_not_false
 19346: test_dict
 24661: test_issue_24288
-18763: test_latex_subs
 19783: test_dagger_mul, test_identity
 16792: test_ccode_unused_array_arg
 19040: test_issue_5786
@@ -280,9 +279,9 @@ tests=[node.name for node in tree.body if isinstance(node,(ast.FunctionDef,ast.A
 ids={re.match(r"test_og_(\d+)_",name).group(1) for name in tests}
 with pathlib.Path("bugs_cards/sympy_og_tickets.csv").open(encoding="utf-8",newline="") as f:
     expected={row["instance_id"].rsplit("-",1)[1] for row in csv.DictReader(f)}
-assert len(tests)==66, len(tests)
+assert len(tests)==65, len(tests)
 assert ids==expected, (expected-ids,ids-expected)
-print("66 checks cover all 55 instance IDs")'
+print("65 checks cover all 54 instance IDs")'
 ```
 
 - [ ] **Step 4: Prove the unmodified base is green**
@@ -291,7 +290,7 @@ print("66 checks cover all 55 instance IDs")'
 python -m pytest -q sirius_tests/test_sympy_og_bugs.py
 ```
 
-Expected: `66 passed`; collection errors, skips, xfails, and warnings that hide a target assertion are not accepted.
+Expected: `65 passed`; collection errors, skips, xfails, and warnings that hide a target assertion are not accepted.
 
 - [ ] **Step 5: Commit the green regression suite**
 
@@ -325,7 +324,7 @@ git commit -m "Add SymPy OG regression checks"
 python -m pytest -q sirius_tests/test_sympy_og_bugs.py -k 'og_14711 or og_23534 or og_16886 or og_20590 or og_19637 or og_16450 or og_24213 or og_19954 or og_21612 or og_17139 or og_19346 or og_16792 or og_20154 or og_20428 or og_15976'
 ```
 
-Expected: `17 passed, 49 deselected`.
+Expected: `17 passed, 48 deselected`.
 
 - [ ] **Step 2: Apply the exact reverse patches**
 
@@ -366,7 +365,7 @@ Expected: exit 0 and modifications limited to the 15 listed production paths.
 python -m pytest -q --tb=short sirius_tests/test_sympy_og_bugs.py -k 'og_14711 or og_23534 or og_16886 or og_20590 or og_19637 or og_16450 or og_24213 or og_19954 or og_21612 or og_17139 or og_19346 or og_16792 or og_20154 or og_20428 or og_15976'
 ```
 
-Expected: `17 failed, 49 deselected`, with no collection or import errors.
+Expected: `17 failed, 48 deselected`, with no collection or import errors.
 
 - [ ] **Step 4: Commit the directly reversible regressions**
 
@@ -398,21 +397,21 @@ git commit -m "Reintroduce directly reversible SymPy OG bugs"
 python -m pytest -q sirius_tests/test_sympy_og_bugs.py -k 'og_23824 or og_23950 or og_16766 or og_15017 or og_15809 or og_13551 or og_13480 or og_21847 or og_15349 or og_13372'
 ```
 
-Expected: `11 passed, 55 deselected`.
+Expected: `11 passed, 54 deselected`.
 
 - [ ] **Step 2: Extract every manual inverse patch**
 
-Run this once to create the forty exact patch files used by Tasks 5–8:
+Run this once to create the thirty-nine exact patch files used by Tasks 5–8:
 
 ```bash
 python3 -c 'import json,pathlib
 source=pathlib.Path("/Users/family/Documents/Сириус/sirius-swebench-light/sirius_benchmark/tickets/sympy_og_tickets_full.jsonl")
-ids={"23824","23950","16766","15017","15809","13551","13480","21847","15349","13372","18189","20916","13031","22456","12419","23262","23413","17318","13647","15875","18211","24539","19495","13615","20801","24661","18763","19783","19040","21379","21930","13852","13757","13974","24443","21596","22080","13877","18199","13878"}
+ids={"23824","23950","16766","15017","15809","13551","13480","21847","15349","13372","18189","20916","13031","22456","12419","23262","23413","17318","13647","15875","18211","24539","19495","13615","20801","24661","19783","19040","21379","21930","13852","13757","13974","24443","21596","22080","13877","18199","13878"}
 for row in map(json.loads,source.open(encoding="utf-8")):
     issue=row["instance_id"].rsplit("-",1)[1]
     if issue in ids:
         pathlib.Path(f"/private/tmp/{row['instance_id']}.patch").write_text(row["patch"],encoding="utf-8")
-print("40 manual patches extracted")'
+print("39 manual patches extracted")'
 ```
 
 Then run `git apply -R --reject --whitespace=nowarn` one ID at a time. Use each generated `.rej` as the exact inverse specification and transpose only that rejected hunk into the current implementation with `apply_patch`. Remove the `.rej` after the hunk is represented in the production file.
@@ -453,7 +452,7 @@ python -m pytest -q --tb=short sirius_tests/test_sympy_og_bugs.py -k og_13372
 python -m pytest -q --tb=short sirius_tests/test_sympy_og_bugs.py -k 'og_23824 or og_23950 or og_16766 or og_15017 or og_15809 or og_13551 or og_13480 or og_21847 or og_15349 or og_13372'
 ```
 
-Expected: `11 failed, 55 deselected`.
+Expected: `11 failed, 54 deselected`.
 
 - [ ] **Step 5: Commit the group**
 
@@ -485,7 +484,7 @@ git commit -m "Reintroduce SymPy OG bugs batch one"
 python -m pytest -q sirius_tests/test_sympy_og_bugs.py -k 'og_18189 or og_20916 or og_13031 or og_22456 or og_12419 or og_23262 or og_23413 or og_17318 or og_13647 or og_15875'
 ```
 
-Expected: `10 passed, 56 deselected`.
+Expected: `10 passed, 55 deselected`.
 
 - [ ] **Step 2: Apply or transpose the ten inverse patches individually**
 
@@ -529,7 +528,7 @@ git add sympy
 git commit -m "Reintroduce SymPy OG bugs batch two"
 ```
 
-Expected pytest result: `10 failed, 56 deselected`.
+Expected pytest result: `10 failed, 55 deselected`.
 
 ### Task 7: Adapt manual regressions 18211 through 21379
 
@@ -542,19 +541,18 @@ Expected pytest result: `10 failed, 56 deselected`.
 13615 sympy/sets/sets.py test_Complement
 20801 sympy/core/numbers.py test_zero_not_false
 24661 sympy/parsing/sympy_parser.py test_issue_24288
-18763 sympy/printing/latex.py test_latex_subs
 19783 sympy/physics/quantum/dagger.py and sympy/physics/quantum/operator.py test_dagger_mul, test_identity
 19040 sympy/polys/factortools.py test_issue_5786
 21379 sympy/core/mod.py test_Mod
 ```
 
-- [ ] **Step 1: Run the 11 checks before mutation**
+- [ ] **Step 1: Run the 10 checks before mutation**
 
 ```bash
-python -m pytest -q sirius_tests/test_sympy_og_bugs.py -k 'og_18211 or og_24539 or og_19495 or og_13615 or og_20801 or og_24661 or og_18763 or og_19783 or og_19040 or og_21379'
+python -m pytest -q sirius_tests/test_sympy_og_bugs.py -k 'og_18211 or og_24539 or og_19495 or og_13615 or og_20801 or og_24661 or og_19783 or og_19040 or og_21379'
 ```
 
-Expected: `11 passed, 55 deselected`.
+Expected: `10 passed, 55 deselected`.
 
 - [ ] **Step 2: Apply or transpose inverse patches one production path at a time**
 
@@ -567,7 +565,6 @@ git apply -R --reject --whitespace=nowarn /private/tmp/sympy__sympy-19495.patch
 git apply -R --reject --whitespace=nowarn /private/tmp/sympy__sympy-13615.patch
 git apply -R --reject --whitespace=nowarn /private/tmp/sympy__sympy-20801.patch
 git apply -R --reject --whitespace=nowarn /private/tmp/sympy__sympy-24661.patch
-git apply -R --reject --whitespace=nowarn /private/tmp/sympy__sympy-18763.patch
 git apply -R --reject --whitespace=nowarn /private/tmp/sympy__sympy-19783.patch
 git apply -R --reject --whitespace=nowarn /private/tmp/sympy__sympy-19040.patch
 git apply -R --reject --whitespace=nowarn /private/tmp/sympy__sympy-21379.patch
@@ -584,7 +581,6 @@ python -m pytest -q --tb=short sirius_tests/test_sympy_og_bugs.py -k og_19495
 python -m pytest -q --tb=short sirius_tests/test_sympy_og_bugs.py -k og_13615
 python -m pytest -q --tb=short sirius_tests/test_sympy_og_bugs.py -k og_20801
 python -m pytest -q --tb=short sirius_tests/test_sympy_og_bugs.py -k og_24661
-python -m pytest -q --tb=short sirius_tests/test_sympy_og_bugs.py -k og_18763
 python -m pytest -q --tb=short sirius_tests/test_sympy_og_bugs.py -k og_19783
 python -m pytest -q --tb=short sirius_tests/test_sympy_og_bugs.py -k og_19040
 python -m pytest -q --tb=short sirius_tests/test_sympy_og_bugs.py -k og_21379
@@ -593,12 +589,12 @@ python -m pytest -q --tb=short sirius_tests/test_sympy_og_bugs.py -k og_21379
 - [ ] **Step 4: Verify and commit the group**
 
 ```bash
-python -m pytest -q --tb=short sirius_tests/test_sympy_og_bugs.py -k 'og_18211 or og_24539 or og_19495 or og_13615 or og_20801 or og_24661 or og_18763 or og_19783 or og_19040 or og_21379'
+python -m pytest -q --tb=short sirius_tests/test_sympy_og_bugs.py -k 'og_18211 or og_24539 or og_19495 or og_13615 or og_20801 or og_24661 or og_19783 or og_19040 or og_21379'
 git add sympy
 git commit -m "Reintroduce SymPy OG bugs batch three"
 ```
 
-Expected pytest result: `11 failed, 55 deselected`.
+Expected pytest result: `10 failed, 55 deselected`.
 
 ### Task 8: Adapt manual regressions 21930 through 13878
 
@@ -623,7 +619,7 @@ Expected pytest result: `11 failed, 55 deselected`.
 python -m pytest -q sirius_tests/test_sympy_og_bugs.py -k 'og_21930 or og_13852 or og_13757 or og_13974 or og_24443 or og_21596 or og_22080 or og_13877 or og_18199 or og_13878'
 ```
 
-Expected: `17 passed, 49 deselected`.
+Expected: `17 passed, 48 deselected`.
 
 - [ ] **Step 2: Apply or transpose the final ten inverse patches**
 
@@ -667,9 +663,9 @@ git add sympy
 git commit -m "Reintroduce SymPy OG bugs batch four"
 ```
 
-Expected pytest result: `17 failed, 49 deselected`.
+Expected pytest result: `17 failed, 48 deselected`.
 
-### Task 9: Verify all 55 bugs and preserve protected branches
+### Task 9: Verify all 54 bugs and preserve protected branches
 
 **Files:**
 - Verify: `sirius_tests/test_sympy_og_bugs.py`
@@ -681,7 +677,7 @@ Expected pytest result: `17 failed, 49 deselected`.
 
 Run the structural checker from Task 3 again.
 
-Expected: `66 checks cover all 55 instance IDs`.
+Expected: `65 checks cover all 54 instance IDs`.
 
 - [ ] **Step 2: Run only the targeted buggy suite**
 
@@ -689,7 +685,7 @@ Expected: `66 checks cover all 55 instance IDs`.
 ./scripts/run_sirius_tests.sh
 ```
 
-Expected: pytest collects 66 items and reports `66 failed`; no errors, skips, xfails, hangs, or unrelated tests. A nonzero exit code is expected because this is the buggy branch.
+Expected: pytest collects 65 items and reports `65 failed`; no errors, skips, xfails, hangs, or unrelated tests. A nonzero exit code is expected because this is the buggy branch.
 
 - [ ] **Step 3: Confirm the test file is green against the unmodified base**
 
@@ -705,7 +701,7 @@ cd /Users/family/Documents/Сириус/sympy-sirius-light/og-buggy
 git worktree remove /private/tmp/sirius-og-baseline
 ```
 
-Expected baseline result: `66 passed`.
+Expected baseline result: `65 passed`.
 
 - [ ] **Step 4: Recheck protected statuses and source integrity**
 
@@ -718,8 +714,8 @@ git status --short --branch
 git diff --check master...HEAD
 ```
 
-Expected: protected statuses match Task 1; source hash remains `37be1ef140bfdc9d112b54599c92629100a58a816de9eac596a5a51ce93b667e`; new worktree is clean; diff check exits 0.
+Expected: protected statuses match Task 1; source hash remains `68722a795bf86a81d313073c239aecbc29c6baeda4949eec2eaaea3fe41ffe63`; new worktree is clean; diff check exits 0.
 
 - [ ] **Step 5: Produce the final evidence table**
 
-For all 55 rows, report `instance_id`, every test function whose numeric segment matches that instance, changed production paths, and the observed failure reason. Use fresh pytest output and `git diff --name-only master...HEAD` as evidence.
+For all 54 rows, report `instance_id`, every test function whose numeric segment matches that instance, changed production paths, and the observed failure reason. Use fresh pytest output and `git diff --name-only master...HEAD` as evidence.
