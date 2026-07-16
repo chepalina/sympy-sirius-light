@@ -167,10 +167,10 @@ def test_og_15349_test_quaternion_conversions():
 def test_og_16450_test_posify():
     from sympy import Symbol, posify
 
-    original = Symbol("k", finite=True)
+    original = Symbol("k", integer=True)
     positive, replacements = posify(original)
     assert positive.is_positive is True
-    assert positive.is_finite is True
+    assert positive.is_integer is True
     assert positive.subs(replacements) == original
 
 
