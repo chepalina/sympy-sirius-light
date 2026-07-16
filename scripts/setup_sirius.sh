@@ -7,4 +7,4 @@ VENV_DIR="$(cd "$REPO_ROOT/.." && pwd)/.venv"
 python3 -m venv "$VENV_DIR"
 . "$VENV_DIR/bin/activate"
 python -m pip install --upgrade pip
-python -m pip install -e "$REPO_ROOT" pytest
+python -m pip install -e "$REPO_ROOT" pytest hypothesis
