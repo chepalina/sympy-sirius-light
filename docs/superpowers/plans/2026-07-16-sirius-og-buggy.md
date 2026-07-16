@@ -18,7 +18,7 @@
 - Create `sirius_tests/test_sympy_og_bugs.py`: 65 targeted regression checks covering all 54 `instance_id` values.
 - Create `scripts/setup_sirius.sh`: local virtual-environment setup.
 - Create `scripts/run_sirius_tests.sh`: targeted buggy-suite runner.
-- Modify the 54 production paths named by `patch_files`; no two tasks share the same production path.
+- Modify all production paths named by `patch_files` for the 54 tasks (58 unique paths); no two tasks share a path.
 - Do not copy `sympy_og_tickets_full.jsonl` into this branch because it contains answer patches.
 
 The immutable sources are:
