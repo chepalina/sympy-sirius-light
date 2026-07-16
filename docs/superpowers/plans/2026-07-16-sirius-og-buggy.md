@@ -606,6 +606,8 @@ Expected: `10 passed, 55 deselected`.
 
 Run the exact commands below, transpose rejected inverse hunks with `apply_patch`, and remove `.rej` files. For `18189`, locate the current implementation after the historical `sympy/solvers/diophantine.py` package move and place the inverse behavior in the current module that exports `diophantine`.
 
+For `15875`, a later SymPy refactor changed the historical boolean `im` marker into a counter, which masks the official bug even after reversing the zero-length `nz` guard. Preserve the historical user-visible behavior by transposing both pieces of the old `_eval_is_zero` path into current `sympy/core/add.py`: restore `if len(nz) == len(self.args)`, initialize `im = False`, set `im = True` for an imaginary argument, and use boolean `not im` / `im` checks in the final `b.is_zero` branch. The unchanged oracle `-2*I + (1 + I)**2` must then report `is_zero is False` instead of `None`.
+
 ```bash
 git apply -R --reject --whitespace=nowarn /private/tmp/sympy__sympy-18189.patch
 git apply -R --reject --whitespace=nowarn /private/tmp/sympy__sympy-20916.patch
