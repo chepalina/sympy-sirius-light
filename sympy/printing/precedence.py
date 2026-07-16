@@ -109,6 +109,10 @@ def precedence_FracElement(item):
         return PRECEDENCE["Mul"]
 
 
+def precedence_UnevaluatedExpr(item):
+    return precedence(item.args[0]) - 0.5
+
+
 PRECEDENCE_FUNCTIONS = {
     "Integer": precedence_Integer,
     "Mul": precedence_Mul,
@@ -116,6 +120,7 @@ PRECEDENCE_FUNCTIONS = {
     "Float": precedence_Float,
     "PolyElement": precedence_PolyElement,
     "FracElement": precedence_FracElement,
+    "UnevaluatedExpr": precedence_UnevaluatedExpr,
 }
 
 

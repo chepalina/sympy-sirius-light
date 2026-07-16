@@ -550,6 +550,11 @@ class CodePrinter(StrPrinter):
     def _print_Mul(self, expr):
 
         prec = precedence(expr)
+        if (expr.could_extract_minus_sign()
+                and any(isinstance(arg, UnevaluatedExpr) for arg in expr.args)):
+            # Before Mul handled UnevaluatedExpr specially, a leading minus
+            # gave the whole expression Add precedence.
+            prec = precedence(S.NegativeOne)
 
         c, e = expr.as_coeff_Mul()
         if c < 0:
