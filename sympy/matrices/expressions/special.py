@@ -168,12 +168,9 @@ class Identity(MatrixExpr):
         return self
 
     def _entry(self, i, j, **kwargs):
-        eq = Eq(i, j)
-        if eq is S.true:
+        if i == j:
             return S.One
-        elif eq is S.false:
-            return S.Zero
-        return KroneckerDelta(i, j, (0, self.cols-1))
+        return S.Zero
 
     def _eval_determinant(self):
         return S.One
