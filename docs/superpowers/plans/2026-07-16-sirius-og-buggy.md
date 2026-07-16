@@ -659,7 +659,7 @@ Expected pytest result: `10 failed, 55 deselected`.
 13615 sympy/sets/sets.py test_Complement
 20801 sympy/core/numbers.py test_zero_not_false
 24661 sympy/parsing/sympy_parser.py test_issue_24288
-19783 sympy/physics/quantum/dagger.py and sympy/physics/quantum/operator.py test_dagger_mul, test_identity
+19783 sympy/physics/quantum/transforms.py (historical dagger.py/operator.py behavior) test_dagger_mul, test_identity
 19040 sympy/polys/factortools.py test_issue_5786
 21379 sympy/core/mod.py test_Mod
 ```
@@ -674,7 +674,7 @@ Expected: `10 passed, 55 deselected`.
 
 - [ ] **Step 2: Apply or transpose inverse patches one production path at a time**
 
-Run these commands separately, use rejected hunks as the exact old-behavior specification, and edit only the paths listed above. Keep the two `19783` checks separate and verify both after changing the two quantum modules.
+Run these commands separately, use rejected hunks as the exact old-behavior specification, and edit only the paths listed above. For `19783`, the two historical class-local `__mul__` implementations were replaced by the dispatcher in `sympy/physics/quantum/transforms.py`. Restore the old Dagger/Identity interaction there by registering the two specific `(IdentityOperator, Dagger)` and `(Dagger, IdentityOperator)` pairs as no-transform cases; do not re-add class-local hooks that are bypassed by the constructor postprocessor. Keep the two `19783` checks separate and verify both.
 
 ```bash
 git apply -R --reject --whitespace=nowarn /private/tmp/sympy__sympy-18211.patch
