@@ -586,7 +586,7 @@ git commit -m "Reintroduce SymPy OG bugs batch one"
 20916 sympy/printing/conventions.py test_super_sub
 13031 sympy/matrices/sparse.py test_sparse_matrix
 22456 sympy/codegen/ast.py test_String
-12419 sympy/matrices/expressions/matexpr.py test_Identity
+12419 sympy/matrices/expressions/special.py test_Identity
 23262 sympy/utilities/lambdify.py test_issue_14941
 23413 sympy/polys/matrices/normalforms.py test_hermite_normal
 17318 sympy/simplify/radsimp.py and sympy/simplify/sqrtdenest.py test_issue_12420
@@ -604,7 +604,7 @@ Expected: `10 passed, 55 deselected`.
 
 - [ ] **Step 2: Apply or transpose the ten inverse patches individually**
 
-Run the exact commands below, transpose rejected inverse hunks with `apply_patch`, and remove `.rej` files. For `18189`, locate the current implementation after the historical `sympy/solvers/diophantine.py` package move and place the inverse behavior in the current module that exports `diophantine`.
+Run the exact commands below, transpose rejected inverse hunks with `apply_patch`, and remove `.rej` files. For `18189`, locate the current implementation after the historical `sympy/solvers/diophantine.py` package move and place the inverse behavior in the current module that exports `diophantine`. For `12419`, the historical `Identity` class moved out of `matexpr.py`; restore the old structural `i == j` behavior only in the current `Identity._entry` in `sympy/matrices/expressions/special.py`, without adding checks to generic `MatrixExpr.__getitem__`.
 
 For `15875`, a later SymPy refactor changed the historical boolean `im` marker into a counter, which masks the official bug even after reversing the zero-length `nz` guard. Preserve the historical user-visible behavior by transposing both pieces of the old `_eval_is_zero` path into current `sympy/core/add.py`: restore `if len(nz) == len(self.args)`, initialize `im = False`, set `im = True` for an imaginary argument, and use boolean `not im` / `im` checks in the final `b.is_zero` branch. The unchanged oracle `-2*I + (1 + I)**2` must then report `is_zero is False` instead of `None`.
 
