@@ -692,7 +692,7 @@ class Add(Expr, AssocOp):
         nz = []
         z = 0
         im_or_z = False
-        im = 0
+        im = False
         for a in self.args:
             if a.is_extended_real:
                 if a.is_zero:
@@ -702,7 +702,7 @@ class Add(Expr, AssocOp):
                 else:
                     return
             elif a.is_imaginary:
-                im += 1
+                im = True
             elif a.is_Mul and S.ImaginaryUnit in a.args:
                 coeff, ai = a.as_coeff_mul(S.ImaginaryUnit)
                 if ai == (S.ImaginaryUnit,) and coeff.is_extended_real:
@@ -713,14 +713,14 @@ class Add(Expr, AssocOp):
                 return
         if z == len(self.args):
             return True
-        if len(nz) in [0, len(self.args)]:
+        if len(nz) == len(self.args):
             return None
         b = self.func(*nz)
         if b.is_zero:
             if not im_or_z:
-                if im == 0:
+                if not im:
                     return True
-                elif im == 1:
+                elif im:
                     return False
         if b.is_zero is False:
             return False

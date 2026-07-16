@@ -1029,7 +1029,7 @@ def radsimp(expr, symbolic=True, max_terms=4):
 def rad_rationalize(num, den):
     """
     Rationalize ``num/den`` by removing square roots in the denominator;
-    num and den are sum of terms whose squares are positive rationals.
+    num and den are sum of terms whose squares are rationals
 
     Examples
     ========
@@ -1170,9 +1170,9 @@ expand_fraction = fraction_expand
 
 def split_surds(expr):
     """
-    Split an expression with terms whose squares are positive rationals
+    split an expression with terms whose squares are rationals
     into a sum of terms whose surds squared have gcd equal to g
-    and a sum of terms with surds squared prime with g.
+    and a sum of terms with surds squared prime with g
 
     Examples
     ========

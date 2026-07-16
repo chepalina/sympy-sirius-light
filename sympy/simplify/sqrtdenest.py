@@ -154,8 +154,7 @@ def _sqrt_match(p):
         res = (p, S.Zero, S.Zero)
     elif p.is_Add:
         pargs = sorted(p.args, key=default_sort_key)
-        sqargs = [x**2 for x in pargs]
-        if all(sq.is_Rational and sq.is_positive for sq in sqargs):
+        if all((x**2).is_Rational for x in pargs):
             r, b, a = split_surds(p)
             res = a, b, r
             return list(res)

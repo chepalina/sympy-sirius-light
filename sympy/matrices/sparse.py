@@ -105,6 +105,16 @@ class SparseRepMatrix(RepMatrix):
     ImmutableSparseMatrix
     """
 
+    def col_join(self, other):
+        if not self:
+            return type(self)(other)
+        return super().col_join(other)
+
+    def row_join(self, other):
+        if not self:
+            return type(self)(other)
+        return super().row_join(other)
+
     @classmethod
     def _handle_creation_inputs(cls, *args, **kwargs):
         if len(args) == 1 and isinstance(args[0], MatrixBase):

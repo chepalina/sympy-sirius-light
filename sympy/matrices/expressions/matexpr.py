@@ -305,6 +305,8 @@ class MatrixExpr(Expr):
                 return MatrixSlice(self, i, j)
             i, j = _sympify(i), _sympify(j)
             if self.valid_index(i, j) != False:
+                if self.is_Identity:
+                    return S.One if i == j else S.Zero
                 return self._entry(i, j)
             else:
                 raise IndexError("Invalid indices (%s, %s)" % (i, j))
@@ -320,6 +322,8 @@ class MatrixExpr(Expr):
             i = key // cols
             j = key % cols
             if self.valid_index(i, j) != False:
+                if self.is_Identity:
+                    return S.One if i == j else S.Zero
                 return self._entry(i, j)
             else:
                 raise IndexError("Invalid index %s" % key)

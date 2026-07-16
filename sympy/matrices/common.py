@@ -199,7 +199,7 @@ class MatrixShaping(MatrixRequired):
                 return self[i, j]
             elif pos <= j < pos + other.cols:
                 return other[i, j - pos]
-            return self[i, j - other.cols]
+            return self[i, j - pos - other.cols]
 
         return self._new(self.rows, self.cols + other.cols, entry)
 
