@@ -33,10 +33,10 @@
 
 ## Ручное воспроизведение в bug-ветке
 
-Команда работает в ветке `sirius-light-buggy`.
+Команда работает в ветке `sirius-og-buggy`.
 
 ```bash
-git switch sirius-light-buggy
+git switch sirius-og-buggy
 ./scripts/setup_sirius.sh
 
 ../.venv/bin/python - <<'PY'
@@ -45,30 +45,15 @@ git switch sirius-light-buggy
 PY
 ```
 
-Описать, что команда должна увидеть в `sirius-light-buggy`: ошибку, неверный
+Описать, что команда должна увидеть в `sirius-og-buggy`: ошибку, неверный
 вывод или другое некорректное поведение.
-
-## Сравнение с golden-веткой
-
-Golden-ветка нужна только для ознакомления с исправленным поведением.
-
-```bash
-git switch sirius-light-golden
-./scripts/setup_sirius.sh
-
-../.venv/bin/python - <<'PY'
-# Тот же минимальный код, что и выше.
-PY
-```
-
-Описать ожидаемый корректный вывод или корректное поведение.
 
 ## Автоматический тест
 
 Команда для запуска теста, который фиксирует этот баг:
 
 ```bash
-../.venv/bin/python -m pytest -q sirius_tests/test_light_bugs.py::test_NAME
+../.venv/bin/python -m pytest -q sirius_tests/test_sympy_og_bugs.py::test_og_XXXXX_test_NAME
 ```
 
 В начале работы над bug-веткой этот тест должен падать. После исправления бага
