@@ -4,7 +4,7 @@
 
 **Goal:** Build a green `sirius-og-golden` branch and a matching `sirius-og-buggy` branch with all 54 SWE-bench OG regressions reproducible by 65 targeted pytest checks.
 
-**Architecture:** Keep complete SymPy checkouts at `sympy-sirius-light/og-golden` and `sympy-sirius-light/og-buggy`, with the student dataset inside each branch's `bugs_cards/` directory. Freeze `sirius-og-golden` at green commit `26b4e33`, then reverse or semantically adapt the 54 production patches only in `sirius-og-buggy` so every targeted check fails for the intended reason. Fifteen reverse patches apply directly; thirty-nine require adaptation to SymPy 1.15.0.dev.
+**Architecture:** Keep complete SymPy checkouts at `sympy-sirius-light/og-golden` and `sympy-sirius-light/og-buggy`, with the student dataset inside each branch's `bugs_cards/` directory. Create `sirius-og-golden` from green commit `26b4e33` and keep its production tree unchanged; synchronized test-only compatibility adaptations are allowed when current SymPy semantics make a historical assertion insensitive. Reverse or semantically adapt the 54 production patches only in `sirius-og-buggy` so every targeted check fails for the intended reason. Fifteen reverse patches apply directly; thirty-nine require adaptation to SymPy 1.15.0.dev.
 
 **Tech Stack:** Python 3.11+, SymPy 1.15.0.dev, pytest, hypothesis, Bash, Git worktrees, official SWE-bench JSONL.
 
@@ -396,6 +396,7 @@ Expected: the branch configuration prints `origin` and `refs/heads/sirius-og-gol
 - Modify: `sympy/utilities/iterables.py`
 - Modify: `sympy/polys/domains/expressiondomain.py`
 - Modify: `sympy/printing/mathml.py`
+- Modify identically in both OG branches: `sirius_tests/test_sympy_og_bugs.py`
 
 - [ ] **Step 1: Reconfirm these 17 checks are green**
 
@@ -438,7 +439,43 @@ python3 /private/tmp/apply_clean_og.py
 
 Expected: exit 0 and modifications limited to the 15 listed production paths.
 
-- [ ] **Step 3: Prove all 17 checks now fail for assertions or expected exceptions**
+- [ ] **Step 3: Adapt the issue 16450 oracle to current assumption semantics**
+
+The historical test used `finite=True`, but current SymPy infers finiteness from `positive=True`, so the exact inverse patch is no longer observable with that assumption. Replace only `test_og_16450_test_posify` identically in `og-buggy` and `og-golden` with:
+
+```python
+def test_og_16450_test_posify():
+    from sympy import Symbol, posify
+
+    original = Symbol("k", integer=True)
+    positive, replacements = posify(original)
+    assert positive.is_positive is True
+    assert positive.is_integer is True
+    assert positive.subs(replacements) == original
+```
+
+Run:
+
+```bash
+../og-golden/scripts/run_sirius_tests.sh
+../.venv/bin/python -m pytest -q --tb=short sirius_tests/test_sympy_og_bugs.py -k og_16450
+```
+
+Expected: golden reports `65 passed`; buggy reports `1 failed, 64 deselected` because the inverse patch drops `integer=True`.
+
+- [ ] **Step 4: Commit and publish the synchronized test adaptation**
+
+```bash
+git -C ../og-golden add sirius_tests/test_sympy_og_bugs.py
+git -C ../og-golden commit -m "Adapt posify regression check for current assumptions"
+git -C ../og-golden push origin sirius-og-golden
+git add sirius_tests/test_sympy_og_bugs.py
+git commit -m "Adapt posify regression check for current assumptions"
+```
+
+Expected: both branches contain byte-for-byte identical test files; the golden branch is published and clean; the fifteen production modifications remain unstaged in buggy.
+
+- [ ] **Step 5: Prove all 17 checks now fail for assertions or expected exceptions**
 
 ```bash
 ../.venv/bin/python -m pytest -q --tb=short sirius_tests/test_sympy_og_bugs.py -k 'og_14711 or og_23534 or og_16886 or og_20590 or og_19637 or og_16450 or og_24213 or og_19954 or og_21612 or og_17139 or og_19346 or og_16792 or og_20154 or og_20428 or og_15976'
@@ -446,7 +483,7 @@ Expected: exit 0 and modifications limited to the 15 listed production paths.
 
 Expected: `17 failed, 48 deselected`, with no collection or import errors.
 
-- [ ] **Step 4: Commit the directly reversible regressions**
+- [ ] **Step 6: Commit the directly reversible regressions**
 
 ```bash
 git add sympy
