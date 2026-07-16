@@ -1443,8 +1443,6 @@ def dmp_ext_factor(f, u, K):
 
     result = dmp_trial_division(F, factors, u, K)
 
-    _dmp_check_degrees(F, u, result)
-
     return lc, result
 
 

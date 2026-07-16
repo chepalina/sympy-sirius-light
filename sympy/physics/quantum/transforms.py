@@ -20,6 +20,7 @@ from sympy.multipledispatch.dispatcher import (
 )
 from sympy.utilities.misc import debug
 
+from sympy.physics.quantum.dagger import Dagger
 from sympy.physics.quantum.innerproduct import InnerProduct
 from sympy.physics.quantum.kind import KetKind, BraKind, OperatorKind
 from sympy.physics.quantum.operator import (
@@ -73,6 +74,16 @@ _transform_state_pair.add(
 _transform_state_pair.add(
     (IdentityOperator, IdentityOperator),
     lambda x, y: S.One,
+    on_ambiguity=ambiguity_register_error_ignore_dup
+)
+_transform_state_pair.add(
+    (IdentityOperator, Dagger),
+    lambda x, y: None,
+    on_ambiguity=ambiguity_register_error_ignore_dup
+)
+_transform_state_pair.add(
+    (Dagger, IdentityOperator),
+    lambda x, y: None,
     on_ambiguity=ambiguity_register_error_ignore_dup
 )
 

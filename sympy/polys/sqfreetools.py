@@ -482,9 +482,7 @@ def dmp_sqf_part(f, u, K):
     if K.is_negative(dmp_ground_LC(f, u, K)):
         f = dmp_neg(f, u, K)
 
-    gcd = f
-    for i in range(u+1):
-        gcd = dmp_gcd(gcd, dmp_diff_in(f, 1, i, u, K), u, K)
+    gcd = dmp_gcd(f, dmp_diff(f, 1, u, K), u, K)
     sqf = dmp_quo(f, gcd, u, K)
 
     if K.is_Field:

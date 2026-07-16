@@ -1111,6 +1111,8 @@ class Float(Number):
     def __eq__(self, other):
         if isinstance(other, float):
             other = Float(other)
+        if not self:
+            return not other
         return Basic.__eq__(self, other)
 
     def __ne__(self, other):

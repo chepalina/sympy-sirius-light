@@ -1125,40 +1125,6 @@ class EvaluateFalseTransformer(ast.NodeTransformer):
         'exp', 'ln', 'log', 'sqrt', 'cbrt',
     )
 
-    relational_operators = {
-        ast.NotEq: 'Ne',
-        ast.Lt: 'Lt',
-        ast.LtE: 'Le',
-        ast.Gt: 'Gt',
-        ast.GtE: 'Ge',
-        ast.Eq: 'Eq'
-    }
-    def visit_Compare(self, node):
-        def reducer(acc, op_right):
-            result, left = acc
-            op, right = op_right
-            if op.__class__ not in self.relational_operators:
-                raise ValueError("Only equation or inequality operators are supported")
-            new = ast.Call(
-                func=ast.Name(
-                    id=self.relational_operators[op.__class__], ctx=ast.Load()
-                ),
-                args=[self.visit(left), self.visit(right)],
-                keywords=[ast.keyword(arg="evaluate", value=ast.Constant(value=False))],
-            )
-            return result + [new], right
-
-        args, _ = reduce(
-            reducer, zip(node.ops, node.comparators), ([], node.left)
-        )
-        if len(args) == 1:
-            return args[0]
-        return ast.Call(
-            func=ast.Name(id=self.operators[ast.BitAnd], ctx=ast.Load()),
-            args=args,
-            keywords=[ast.keyword(arg="evaluate", value=ast.Constant(value=False))],
-        )
-
     def flatten(self, args, func):
         result = []
         for arg in args:

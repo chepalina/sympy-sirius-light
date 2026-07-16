@@ -234,6 +234,8 @@ with
         if newbase != base:
             if not insym:
                 cond = cond.subs(old, new)
+            if cond is S.true:
+                return ConditionSet(new, Contains(new, newbase), newbase)
             return self.func(sym, cond, newbase)
         if insym:
             pass  # no change of bound symbols via subs
@@ -241,6 +243,8 @@ with
             cond = cond.subs(old, new)
         else:
             pass  # let error about the symbol raise from __new__
+        if cond is S.true:
+            return ConditionSet(new, Contains(new, base), base)
         return self.func(sym, cond, base)
 
     def _kind(self):

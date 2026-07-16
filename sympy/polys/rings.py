@@ -835,13 +835,11 @@ class PolyElement(
         return self._cmp(other, ge)
 
     def as_expr(self, *symbols: Expr) -> Expr:
-        if not symbols:
+        if symbols and len(symbols) != self.ring.ngens:
+            raise ValueError("not enough symbols, expected %s got %s" %
+                (self.ring.ngens, len(symbols)))
+        else:
             symbols = self.ring.symbols
-        elif len(symbols) != self.ring.ngens:
-            raise ValueError(
-                "Wrong number of symbols, expected %s got %s"
-                % (self.ring.ngens, len(symbols))
-            )
         return expr_from_dict(self.as_expr_dict(), *symbols)
 
     @overload

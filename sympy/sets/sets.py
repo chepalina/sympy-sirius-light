@@ -263,11 +263,7 @@ class Set(Basic, EvalfMixin):
             return S.EmptySet
 
         elif isinstance(other, FiniteSet):
-            sifted = sift(other, lambda x: fuzzy_bool(self.contains(x)))
-            # ignore those that are contained in self
-            return Union(FiniteSet(*(sifted[False])),
-                Complement(FiniteSet(*(sifted[None])), self, evaluate=False)
-                if sifted[None] else S.EmptySet)
+            return FiniteSet(*[el for el in other if self.contains(el) != True])
 
     def symmetric_difference(self, other):
         """

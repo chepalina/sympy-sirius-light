@@ -174,17 +174,13 @@ class Mod(DefinedFunction):
 
         # XXX other possibilities?
 
-        from sympy.polys.polyerrors import PolynomialError
         from sympy.polys.polytools import gcd
 
         # extract gcd; any further simplification should be done by the user
-        try:
-            G = gcd(p, q)
-            if not equal_valued(G, 1):
-                p, q = [gcd_terms(i/G, clear=False, fraction=False)
-                        for i in (p, q)]
-        except PolynomialError:  # issue 21373
-            G = S.One
+        G = gcd(p, q)
+        if not equal_valued(G, 1):
+            p, q = [gcd_terms(i/G, clear=False, fraction=False)
+                    for i in (p, q)]
         pwas, qwas = p, q
 
         # simplify terms
