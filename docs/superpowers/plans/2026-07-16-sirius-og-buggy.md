@@ -724,14 +724,21 @@ Expected pytest result: `10 failed, 55 deselected`.
 21930 sympy/physics/secondquant.py test_create, test_commutation, test_create_f, test_NO, test_Tensors, test_issue_19661
 13852 sympy/functions/special/zeta_functions.py test_polylog_values
 13757 sympy/polys/polytools.py test_issue_13079
-13974 sympy/physics/quantum/tensorproduct.py test_tensor_product_simp
+13974 sympy/physics/quantum/transforms.py test_tensor_product_simp
 24443 sympy/combinatorics/homomorphisms.py test_homomorphism
 21596 sympy/sets/handlers/intersection.py test_imageset_intersect_real
 22080 sympy/printing/codeprinter.py and sympy/printing/precedence.py test_create_expand_pow_optimization, test_PythonCodePrinter, test_empty_modules
-13877 sympy/matrices/matrices.py and sympy/utilities/randtest.py test_determinant
+13877 sympy/matrices/determinant.py test_determinant
 18199 sympy/ntheory/residue_ntheory.py test_solve_modular
 13878 sympy/stats/crv_types.py test_arcsin
 ```
+
+Current-version adaptations for this group:
+
+- `13757`: removing the historical `Poly._op_priority` fix alone is masked by the later change from `Poly(Expr)` to `Poly(Basic)`. Restore the declared-base `Expr` inheritance together with the priority removal in `polytools.py`; this reproduces the historical unevaluated `x*Poly(x)` dispatch result without a test-specific branch.
+- `13974`: `tensorproduct.py` is now a deprecated no-op facade. The active fix moved to the `TensorProduct` constructor postprocessor in `quantum/transforms.py`; remove only its `Pow` postprocessor while preserving `Mul` and every other quantum transform.
+- `22080`: the nominal `codeprinter.py`/`precedence.py` reverse patch yields two of three failures. A later `UnevaluatedExpr` precedence handler masks the optimizer case, so remove that later handler and mapping as well; keep the adaptation within the nominal `precedence.py` path.
+- `13877`: Bareiss determinant code moved from `matrices.py` to `matrices/determinant.py`, while `randtest.py` became an unrelated re-export. Restore the declared-base naive pivot selection and its discarded `cancel(ret)` result in the moved determinant implementation; do not revert random-number tolerance code.
 
 - [ ] **Step 1: Run the 17 checks before mutation**
 
