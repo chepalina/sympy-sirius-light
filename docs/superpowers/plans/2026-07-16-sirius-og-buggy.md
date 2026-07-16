@@ -1,10 +1,10 @@
-# Sirius OG Buggy Implementation Plan
+# Sirius OG Golden/Buggy Implementation Plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Build `sirius-og-buggy` with all 54 SWE-bench OG regressions reproducible by 65 targeted pytest checks.
+**Goal:** Build a green `sirius-og-golden` branch and a matching `sirius-og-buggy` branch with all 54 SWE-bench OG regressions reproducible by 65 targeted pytest checks.
 
-**Architecture:** Keep the complete SymPy checkout at `sympy-sirius-light/og-buggy` and the student dataset inside its `bugs_cards/` directory. Derive checks from the official `test_patch`/`FAIL_TO_PASS` records, prove all 65 checks pass on the unmodified base, then reverse or semantically adapt the 54 production patches so every targeted check fails for the intended reason. Fifteen reverse patches apply directly; thirty-nine require adaptation to SymPy 1.15.0.dev.
+**Architecture:** Keep complete SymPy checkouts at `sympy-sirius-light/og-golden` and `sympy-sirius-light/og-buggy`, with the student dataset inside each branch's `bugs_cards/` directory. Freeze `sirius-og-golden` at green commit `26b4e33`, then reverse or semantically adapt the 54 production patches only in `sirius-og-buggy` so every targeted check fails for the intended reason. Fifteen reverse patches apply directly; thirty-nine require adaptation to SymPy 1.15.0.dev.
 
 **Tech Stack:** Python 3.11+, SymPy 1.15.0.dev, pytest, hypothesis, Bash, Git worktrees, official SWE-bench JSONL.
 
@@ -18,6 +18,7 @@
 - Create `sirius_tests/test_sympy_og_bugs.py`: 65 targeted regression checks covering all 54 `instance_id` values.
 - Create `scripts/setup_sirius.sh`: local virtual-environment setup.
 - Create `scripts/run_sirius_tests.sh`: targeted buggy-suite runner.
+- Create branch `sirius-og-golden` and worktree `/Users/family/Documents/Сириус/sympy-sirius-light/og-golden` at green commit `26b4e33`.
 - Modify all production paths named by `patch_files` for the 54 tasks (58 unique paths); no two tasks share a path.
 - Do not copy `sympy_og_tickets_full.jsonl` into this branch because it contains answer patches.
 
@@ -299,7 +300,82 @@ git add sirius_tests/test_sympy_og_bugs.py
 git commit -m "Add SymPy OG regression checks"
 ```
 
-### Task 4: Reintroduce the 15 directly reversible regressions
+### Task 4: Create and publish the golden branch
+
+**Git objects:**
+- Create branch: `sirius-og-golden` at `26b4e33d95dd78aee37a128525d9644eb689f9ac`
+- Create worktree: `/Users/family/Documents/Сириус/sympy-sirius-light/og-golden`
+- Verify: `bugs_cards/sympy_og_tickets.csv`
+- Verify: `bugs_cards/sympy_og_tickets_input.csv`
+- Verify: `sirius_tests/test_sympy_og_bugs.py`
+- Verify: `scripts/run_sirius_tests.sh`
+
+- [ ] **Step 1: Record all protected states and prove the target names are free**
+
+Run from `/Users/family/Documents/Сириус/sympy-sirius-light/og-buggy`:
+
+```bash
+git status --short --branch
+git -C ../.repo status --short --branch
+git -C ../buggy status --short --branch
+git -C ../golden status --short --branch
+git branch --list sirius-og-golden
+test ! -e ../og-golden
+```
+
+Expected: `sirius-og-buggy` is clean; master has only the pre-existing `M README.md`; `sirius-light-buggy` has only the pre-existing untracked `bugs_cards/sympy_og_tickets.csv`; `sirius-light-golden` is clean; the new branch name produces no output and the target path does not exist.
+
+- [ ] **Step 2: Create the branch and sibling worktree at the frozen green commit**
+
+```bash
+git worktree add ../og-golden -b sirius-og-golden 26b4e33d95dd78aee37a128525d9644eb689f9ac
+```
+
+Expected: Git reports `Preparing worktree (new branch 'sirius-og-golden')` and checks out commit `26b4e33`.
+
+- [ ] **Step 3: Verify the golden data and test structure**
+
+```bash
+cmp bugs_cards/sympy_og_tickets.csv ../og-golden/bugs_cards/sympy_og_tickets.csv
+cmp bugs_cards/sympy_og_tickets_input.csv ../og-golden/bugs_cards/sympy_og_tickets_input.csv
+cmp sirius_tests/test_sympy_og_bugs.py ../og-golden/sirius_tests/test_sympy_og_bugs.py
+python3 -c 'import ast,csv,pathlib,re
+root=pathlib.Path("../og-golden")
+tree=ast.parse((root/"sirius_tests/test_sympy_og_bugs.py").read_text(encoding="utf-8"))
+tests=[node.name for node in tree.body if isinstance(node,(ast.FunctionDef,ast.AsyncFunctionDef)) and node.name.startswith("test_og_")]
+ids={re.match(r"test_og_(\d+)_",name).group(1) for name in tests}
+with (root/"bugs_cards/sympy_og_tickets.csv").open(encoding="utf-8",newline="") as f:
+    expected={row["instance_id"].rsplit("-",1)[1] for row in csv.DictReader(f)}
+assert len(tests)==65
+assert len(expected)==54
+assert ids==expected
+print("golden: 65 checks cover all 54 instance IDs")'
+```
+
+Expected: every `cmp` exits 0 and the structural checker prints `golden: 65 checks cover all 54 instance IDs`.
+
+- [ ] **Step 4: Prove the golden worktree is green**
+
+```bash
+../og-golden/scripts/run_sirius_tests.sh
+```
+
+Expected: `65 passed`; no failures, errors, skips, or xfails.
+
+- [ ] **Step 5: Publish the golden branch and recheck isolation**
+
+```bash
+git -C ../og-golden push --set-upstream origin sirius-og-golden
+git -C ../og-golden status --short --branch
+git -C ../.repo status --short --branch
+git -C ../buggy status --short --branch
+git -C ../golden status --short --branch
+git worktree list
+```
+
+Expected: `sirius-og-golden` tracks `origin/sirius-og-golden`; the golden worktree is clean; protected statuses are unchanged; `git worktree list` includes both `og-buggy` and `og-golden`.
+
+### Task 5: Reintroduce the 15 directly reversible regressions
 
 **Files:**
 - Modify: `sympy/physics/vector/vector.py`
@@ -374,7 +450,7 @@ git add sympy
 git commit -m "Reintroduce directly reversible SymPy OG bugs"
 ```
 
-### Task 5: Adapt manual regressions 23824 through 13372
+### Task 6: Adapt manual regressions 23824 through 13372
 
 **Files and checks:**
 
@@ -401,7 +477,7 @@ Expected: `11 passed, 54 deselected`.
 
 - [ ] **Step 2: Extract every manual inverse patch**
 
-Run this once to create the thirty-nine exact patch files used by Tasks 5–8:
+Run this once to create the thirty-nine exact patch files used by Tasks 6–9:
 
 ```bash
 python3 -c 'import json,pathlib
@@ -461,7 +537,7 @@ git add sympy
 git commit -m "Reintroduce SymPy OG bugs batch one"
 ```
 
-### Task 6: Adapt manual regressions 18189 through 15875
+### Task 7: Adapt manual regressions 18189 through 15875
 
 **Files and checks:**
 
@@ -530,7 +606,7 @@ git commit -m "Reintroduce SymPy OG bugs batch two"
 
 Expected pytest result: `10 failed, 55 deselected`.
 
-### Task 7: Adapt manual regressions 18211 through 21379
+### Task 8: Adapt manual regressions 18211 through 21379
 
 **Files and checks:**
 
@@ -596,7 +672,7 @@ git commit -m "Reintroduce SymPy OG bugs batch three"
 
 Expected pytest result: `10 failed, 55 deselected`.
 
-### Task 8: Adapt manual regressions 21930 through 13878
+### Task 9: Adapt manual regressions 21930 through 13878
 
 **Files and checks:**
 
@@ -665,13 +741,13 @@ git commit -m "Reintroduce SymPy OG bugs batch four"
 
 Expected pytest result: `17 failed, 48 deselected`.
 
-### Task 9: Verify all 54 bugs and preserve protected branches
+### Task 10: Verify all 54 bugs and preserve protected branches
 
 **Files:**
 - Verify: `sirius_tests/test_sympy_og_bugs.py`
 - Verify: `bugs_cards/sympy_og_tickets.csv`
 - Verify: `bugs_cards/sympy_og_tickets_input.csv`
-- Verify: all production paths changed in Tasks 4–8
+- Verify: all production paths changed in Tasks 5–9
 
 - [ ] **Step 1: Verify collection count and task coverage**
 
@@ -687,21 +763,15 @@ Expected: `65 checks cover all 54 instance IDs`.
 
 Expected: pytest collects 65 items and reports `65 failed`; no errors, skips, xfails, hangs, or unrelated tests. A nonzero exit code is expected because this is the buggy branch.
 
-- [ ] **Step 3: Confirm the test file is green against the unmodified base**
-
-Create a detached temporary worktree at base commit `bd33731801cefa2b3d2df9c515956530dceb1077`, copy only `sirius_tests/test_sympy_og_bugs.py` into it, and run the same test file there with the existing Python environment. Remove the temporary worktree after recording the output.
+- [ ] **Step 3: Confirm the matching golden branch remains green**
 
 ```bash
-git worktree add --detach /private/tmp/sirius-og-baseline bd33731801cefa2b3d2df9c515956530dceb1077
-mkdir -p /private/tmp/sirius-og-baseline/sirius_tests
-cp sirius_tests/test_sympy_og_bugs.py /private/tmp/sirius-og-baseline/sirius_tests/test_sympy_og_bugs.py
-cd /private/tmp/sirius-og-baseline
-python -m pytest -q sirius_tests/test_sympy_og_bugs.py
-cd /Users/family/Documents/Сириус/sympy-sirius-light/og-buggy
-git worktree remove /private/tmp/sirius-og-baseline
+git -C ../og-golden status --short --branch
+../og-golden/scripts/run_sirius_tests.sh
+cmp sirius_tests/test_sympy_og_bugs.py ../og-golden/sirius_tests/test_sympy_og_bugs.py
 ```
 
-Expected baseline result: `65 passed`.
+Expected: `sirius-og-golden` is clean and tracks `origin/sirius-og-golden`; the golden result is `65 passed`; the test file is byte-for-byte identical between golden and buggy.
 
 - [ ] **Step 4: Recheck protected statuses and source integrity**
 
@@ -709,12 +779,13 @@ Expected baseline result: `65 passed`.
 git -C ../.repo status --short --branch
 git -C ../buggy status --short --branch
 git -C ../golden status --short --branch
+git -C ../og-golden status --short --branch
 shasum -a 256 /Users/family/Documents/Сириус/sirius-swebench-light/sirius_benchmark/tickets/sympy_og_tickets.csv
 git status --short --branch
 git diff --check master...HEAD
 ```
 
-Expected: protected statuses match Task 1; source hash remains `68722a795bf86a81d313073c239aecbc29c6baeda4949eec2eaaea3fe41ffe63`; new worktree is clean; diff check exits 0.
+Expected: protected statuses match Task 1; `sirius-og-golden` is clean; source hash remains `68722a795bf86a81d313073c239aecbc29c6baeda4949eec2eaaea3fe41ffe63`; `sirius-og-buggy` is clean; diff check exits 0.
 
 - [ ] **Step 5: Produce the final evidence table**
 
