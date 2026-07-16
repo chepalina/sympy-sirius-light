@@ -323,7 +323,7 @@ git branch --list sirius-og-golden
 test ! -e ../og-golden
 ```
 
-Expected: `sirius-og-buggy` is clean; master has only the pre-existing `M README.md`; `sirius-light-buggy` has only the pre-existing untracked `bugs_cards/sympy_og_tickets.csv`; `sirius-light-golden` is clean; the new branch name produces no output and the target path does not exist.
+Expected: `sirius-og-buggy` is clean; master has only the pre-existing `M README.md`; `sirius-light-buggy` has only the pre-existing untracked `bugs_cards/sympy_og_tickets.csv`; `sirius-light-golden` is clean; the new branch name produces no output and the target path does not exist. This clone fetches only `origin/master`, so the short status of an OG branch is not required to display an upstream or ahead/behind count.
 
 - [ ] **Step 2: Create the branch and sibling worktree at the frozen green commit**
 
@@ -367,13 +367,16 @@ Expected: `65 passed`; no failures, errors, skips, or xfails.
 ```bash
 git -C ../og-golden push --set-upstream origin sirius-og-golden
 git -C ../og-golden status --short --branch
+git -C ../og-golden config --get branch.sirius-og-golden.remote
+git -C ../og-golden config --get branch.sirius-og-golden.merge
+git -C ../og-golden ls-remote --exit-code --heads origin refs/heads/sirius-og-golden
 git -C ../.repo status --short --branch
 git -C ../buggy status --short --branch
 git -C ../golden status --short --branch
 git worktree list
 ```
 
-Expected: `sirius-og-golden` tracks `origin/sirius-og-golden`; the golden worktree is clean; protected statuses are unchanged; `git worktree list` includes both `og-buggy` and `og-golden`.
+Expected: the branch configuration prints `origin` and `refs/heads/sirius-og-golden`; `ls-remote` prints commit `26b4e33` for the GitHub branch; the golden worktree is clean; protected statuses are unchanged; `git worktree list` includes both `og-buggy` and `og-golden`.
 
 ### Task 5: Reintroduce the 15 directly reversible regressions
 
@@ -771,7 +774,7 @@ git -C ../og-golden status --short --branch
 cmp sirius_tests/test_sympy_og_bugs.py ../og-golden/sirius_tests/test_sympy_og_bugs.py
 ```
 
-Expected: `sirius-og-golden` is clean and tracks `origin/sirius-og-golden`; the golden result is `65 passed`; the test file is byte-for-byte identical between golden and buggy.
+Expected: `sirius-og-golden` is clean; the golden result is `65 passed`; the test file is byte-for-byte identical between golden and buggy.
 
 - [ ] **Step 4: Recheck protected statuses and source integrity**
 
