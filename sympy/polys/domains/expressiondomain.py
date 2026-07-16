@@ -144,7 +144,7 @@ class ExpressionDomain(Field, CharacteristicZero, SimpleDomain):
             return not f == g
 
         def __bool__(f):
-            return not f.ex.is_zero
+            return f.ex != 0
 
         def gcd(f, g):
             from sympy.polys import gcd

@@ -611,9 +611,7 @@ def kernS(s):
             while kern in s:
                 kern += choice(string.ascii_letters + string.digits)
             s = s.replace(' ', kern)
-            hit = kern in s
-        else:
-            hit = False
+        hit = kern in s
 
     for i in range(2):
         try:

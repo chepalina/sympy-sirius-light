@@ -67,8 +67,6 @@ class Vector(Printable, EvalfMixin):
 
     def __add__(self, other):
         """The add operator for Vector. """
-        if other == 0:
-            return self
         other = _check_vector(other)
         return Vector(self.args + other.args)
 
