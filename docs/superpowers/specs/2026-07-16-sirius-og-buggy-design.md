@@ -6,7 +6,7 @@
 
 ## Границы работы
 
-- Работа ведётся только в новой ветке `sirius-og-buggy` и worktree `sympy-sirius-light/bugs_cards`.
+- Работа ведётся только в новой ветке `sirius-og-buggy` и worktree `sympy-sirius-light/og-buggy`. Внутри worktree используется каталог `bugs_cards/`, аналогично ветке `sirius-light-buggy`.
 - Ветки `sirius-light-buggy`, `sirius-light-golden` и ручное изменение `README.md` в master-worktree не меняются.
 - `sympy_og_tickets.csv` в `sirius-swebench-light` остаётся неизменным источником метаданных.
 - Полные записи SWE-bench из `sympy_og_tickets_full.jsonl` используются как строительный источник, но не публикуются в buggy-ветке: они содержат готовые исправления и создают утечку ответа для учебного агента.
