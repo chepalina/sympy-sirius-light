@@ -379,6 +379,9 @@ def real_root(arg, n=None, evaluate=None):
 
 class MinMaxBase(Expr, LatticeOp):
     def __new__(cls, *args, **assumptions):
+        if not args:
+            raise ValueError("The Max/Min functions must have arguments.")
+
         from sympy.core.parameters import global_parameters
         evaluate = assumptions.pop('evaluate', global_parameters.evaluate)
         args = (sympify(arg) for arg in args)

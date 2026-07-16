@@ -133,15 +133,12 @@ def itermonomials(variables, max_degrees, min_degrees=None):
         else:
             it = product(variables, repeat=max_degree)
         monomials_set = set()
-        d = max_degree - min_degree
         for item in it:
-            count = 0
+            powers = {variable: 0 for variable in variables}
             for variable in item:
-                if variable == 1:
-                    count += 1
-                    if d < count:
-                        break
-            else:
+                if variable != 1:
+                    powers[variable] += 1
+            if max(powers.values()) >= min_degree:
                 monomials_set.add(Mul(*item))
         yield from monomials_set
 

@@ -1510,16 +1510,12 @@ def evalf(x: Expr, prec: int, options: OPT_DICT) -> TMP_RES:
         elif re.is_number:
             re = re._to_mpmath(prec, allow_ints=False)._mpf_
             reprec = prec
-        else:
-            raise NotImplementedError
         if not im:
             im = None
             imprec = None
         elif im.is_number:
             im = im._to_mpmath(prec, allow_ints=False)._mpf_
             imprec = prec
-        else:
-            raise NotImplementedError
         r = re, im, reprec, imprec
 
     if options.get("verbose"):

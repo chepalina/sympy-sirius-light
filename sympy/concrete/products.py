@@ -340,6 +340,7 @@ class Product(ExprWithIntLimits):
             factored = factor_terms(term, fraction=True)
             if factored.is_Mul:
                 return self._eval_product(factored, (k, a, n))
+            return sum([self._eval_product(i, (k, a, n)) for i in term.as_coeff_Add()])
 
         elif term.is_Mul:
             # Factor in part without the summation variable and part with

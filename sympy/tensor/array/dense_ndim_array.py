@@ -143,7 +143,7 @@ class ImmutableDenseNDimArray(DenseNDimArray, ImmutableNDimArray): # type: ignor
         self._shape = shape
         self._array = list(flat_list)
         self._ndim = len(shape)
-        self._loop_size = functools.reduce(lambda x,y: x*y, shape, 1)
+        self._loop_size = functools.reduce(lambda x,y: x*y, shape) if shape else 0
         return self
 
     def __setitem__(self, index, value):

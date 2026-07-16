@@ -68,4 +68,4 @@ class Contains(Boolean):
         return set().union(*[i.binary_symbols for i in bool_args])
 
     def as_set(self) -> Set:
-        return self.args[1]
+        raise NotImplementedError()
