@@ -135,7 +135,7 @@ if [ -d "$VENV_DIR" ]; then
 fi
 
 cd "$REPO_ROOT"
-python -m pytest -q sirius_tests/test_sympy_og_bugs.py
+../.venv/bin/python -m pytest -q sirius_tests/test_sympy_og_bugs.py
 ```
 
 - [ ] **Step 3: Make scripts executable and validate Bash syntax**
@@ -288,7 +288,7 @@ print("65 checks cover all 54 instance IDs")'
 - [ ] **Step 4: Prove the unmodified base is green**
 
 ```bash
-python -m pytest -q sirius_tests/test_sympy_og_bugs.py
+../.venv/bin/python -m pytest -q sirius_tests/test_sympy_og_bugs.py
 ```
 
 Expected: `65 passed`; collection errors, skips, xfails, and warnings that hide a target assertion are not accepted.
@@ -400,7 +400,7 @@ Expected: the branch configuration prints `origin` and `refs/heads/sirius-og-gol
 - [ ] **Step 1: Reconfirm these 17 checks are green**
 
 ```bash
-python -m pytest -q sirius_tests/test_sympy_og_bugs.py -k 'og_14711 or og_23534 or og_16886 or og_20590 or og_19637 or og_16450 or og_24213 or og_19954 or og_21612 or og_17139 or og_19346 or og_16792 or og_20154 or og_20428 or og_15976'
+../.venv/bin/python -m pytest -q sirius_tests/test_sympy_og_bugs.py -k 'og_14711 or og_23534 or og_16886 or og_20590 or og_19637 or og_16450 or og_24213 or og_19954 or og_21612 or og_17139 or og_19346 or og_16792 or og_20154 or og_20428 or og_15976'
 ```
 
 Expected: `17 passed, 48 deselected`.
@@ -441,7 +441,7 @@ Expected: exit 0 and modifications limited to the 15 listed production paths.
 - [ ] **Step 3: Prove all 17 checks now fail for assertions or expected exceptions**
 
 ```bash
-python -m pytest -q --tb=short sirius_tests/test_sympy_og_bugs.py -k 'og_14711 or og_23534 or og_16886 or og_20590 or og_19637 or og_16450 or og_24213 or og_19954 or og_21612 or og_17139 or og_19346 or og_16792 or og_20154 or og_20428 or og_15976'
+../.venv/bin/python -m pytest -q --tb=short sirius_tests/test_sympy_og_bugs.py -k 'og_14711 or og_23534 or og_16886 or og_20590 or og_19637 or og_16450 or og_24213 or og_19954 or og_21612 or og_17139 or og_19346 or og_16792 or og_20154 or og_20428 or og_15976'
 ```
 
 Expected: `17 failed, 48 deselected`, with no collection or import errors.
@@ -473,7 +473,7 @@ git commit -m "Reintroduce directly reversible SymPy OG bugs"
 - [ ] **Step 1: Prove the 11 group checks are green before mutation**
 
 ```bash
-python -m pytest -q sirius_tests/test_sympy_og_bugs.py -k 'og_23824 or og_23950 or og_16766 or og_15017 or og_15809 or og_13551 or og_13480 or og_21847 or og_15349 or og_13372'
+../.venv/bin/python -m pytest -q sirius_tests/test_sympy_og_bugs.py -k 'og_23824 or og_23950 or og_16766 or og_15017 or og_15809 or og_13551 or og_13480 or og_21847 or og_15349 or og_13372'
 ```
 
 Expected: `11 passed, 54 deselected`.
@@ -513,22 +513,22 @@ git apply -R --reject --whitespace=nowarn /private/tmp/sympy__sympy-13372.patch
 After each file edit, run the matching command below. Every selected check must fail by assertion or the historical exception; import, syntax, fixture, timeout, and collection errors are rejected.
 
 ```bash
-python -m pytest -q --tb=short sirius_tests/test_sympy_og_bugs.py -k og_23824
-python -m pytest -q --tb=short sirius_tests/test_sympy_og_bugs.py -k og_23950
-python -m pytest -q --tb=short sirius_tests/test_sympy_og_bugs.py -k og_16766
-python -m pytest -q --tb=short sirius_tests/test_sympy_og_bugs.py -k og_15017
-python -m pytest -q --tb=short sirius_tests/test_sympy_og_bugs.py -k og_15809
-python -m pytest -q --tb=short sirius_tests/test_sympy_og_bugs.py -k og_13551
-python -m pytest -q --tb=short sirius_tests/test_sympy_og_bugs.py -k og_13480
-python -m pytest -q --tb=short sirius_tests/test_sympy_og_bugs.py -k og_21847
-python -m pytest -q --tb=short sirius_tests/test_sympy_og_bugs.py -k og_15349
-python -m pytest -q --tb=short sirius_tests/test_sympy_og_bugs.py -k og_13372
+../.venv/bin/python -m pytest -q --tb=short sirius_tests/test_sympy_og_bugs.py -k og_23824
+../.venv/bin/python -m pytest -q --tb=short sirius_tests/test_sympy_og_bugs.py -k og_23950
+../.venv/bin/python -m pytest -q --tb=short sirius_tests/test_sympy_og_bugs.py -k og_16766
+../.venv/bin/python -m pytest -q --tb=short sirius_tests/test_sympy_og_bugs.py -k og_15017
+../.venv/bin/python -m pytest -q --tb=short sirius_tests/test_sympy_og_bugs.py -k og_15809
+../.venv/bin/python -m pytest -q --tb=short sirius_tests/test_sympy_og_bugs.py -k og_13551
+../.venv/bin/python -m pytest -q --tb=short sirius_tests/test_sympy_og_bugs.py -k og_13480
+../.venv/bin/python -m pytest -q --tb=short sirius_tests/test_sympy_og_bugs.py -k og_21847
+../.venv/bin/python -m pytest -q --tb=short sirius_tests/test_sympy_og_bugs.py -k og_15349
+../.venv/bin/python -m pytest -q --tb=short sirius_tests/test_sympy_og_bugs.py -k og_13372
 ```
 
 - [ ] **Step 4: Verify the complete group**
 
 ```bash
-python -m pytest -q --tb=short sirius_tests/test_sympy_og_bugs.py -k 'og_23824 or og_23950 or og_16766 or og_15017 or og_15809 or og_13551 or og_13480 or og_21847 or og_15349 or og_13372'
+../.venv/bin/python -m pytest -q --tb=short sirius_tests/test_sympy_og_bugs.py -k 'og_23824 or og_23950 or og_16766 or og_15017 or og_15809 or og_13551 or og_13480 or og_21847 or og_15349 or og_13372'
 ```
 
 Expected: `11 failed, 54 deselected`.
@@ -560,7 +560,7 @@ git commit -m "Reintroduce SymPy OG bugs batch one"
 - [ ] **Step 1: Run the 10 checks before mutation**
 
 ```bash
-python -m pytest -q sirius_tests/test_sympy_og_bugs.py -k 'og_18189 or og_20916 or og_13031 or og_22456 or og_12419 or og_23262 or og_23413 or og_17318 or og_13647 or og_15875'
+../.venv/bin/python -m pytest -q sirius_tests/test_sympy_og_bugs.py -k 'og_18189 or og_20916 or og_13031 or og_22456 or og_12419 or og_23262 or og_23413 or og_17318 or og_13647 or og_15875'
 ```
 
 Expected: `10 passed, 55 deselected`.
@@ -587,22 +587,22 @@ git apply -R --reject --whitespace=nowarn /private/tmp/sympy__sympy-15875.patch
 Run the matching command immediately after each production edit. Expected: every selected check fails for the historic behavior only.
 
 ```bash
-python -m pytest -q --tb=short sirius_tests/test_sympy_og_bugs.py -k og_18189
-python -m pytest -q --tb=short sirius_tests/test_sympy_og_bugs.py -k og_20916
-python -m pytest -q --tb=short sirius_tests/test_sympy_og_bugs.py -k og_13031
-python -m pytest -q --tb=short sirius_tests/test_sympy_og_bugs.py -k og_22456
-python -m pytest -q --tb=short sirius_tests/test_sympy_og_bugs.py -k og_12419
-python -m pytest -q --tb=short sirius_tests/test_sympy_og_bugs.py -k og_23262
-python -m pytest -q --tb=short sirius_tests/test_sympy_og_bugs.py -k og_23413
-python -m pytest -q --tb=short sirius_tests/test_sympy_og_bugs.py -k og_17318
-python -m pytest -q --tb=short sirius_tests/test_sympy_og_bugs.py -k og_13647
-python -m pytest -q --tb=short sirius_tests/test_sympy_og_bugs.py -k og_15875
+../.venv/bin/python -m pytest -q --tb=short sirius_tests/test_sympy_og_bugs.py -k og_18189
+../.venv/bin/python -m pytest -q --tb=short sirius_tests/test_sympy_og_bugs.py -k og_20916
+../.venv/bin/python -m pytest -q --tb=short sirius_tests/test_sympy_og_bugs.py -k og_13031
+../.venv/bin/python -m pytest -q --tb=short sirius_tests/test_sympy_og_bugs.py -k og_22456
+../.venv/bin/python -m pytest -q --tb=short sirius_tests/test_sympy_og_bugs.py -k og_12419
+../.venv/bin/python -m pytest -q --tb=short sirius_tests/test_sympy_og_bugs.py -k og_23262
+../.venv/bin/python -m pytest -q --tb=short sirius_tests/test_sympy_og_bugs.py -k og_23413
+../.venv/bin/python -m pytest -q --tb=short sirius_tests/test_sympy_og_bugs.py -k og_17318
+../.venv/bin/python -m pytest -q --tb=short sirius_tests/test_sympy_og_bugs.py -k og_13647
+../.venv/bin/python -m pytest -q --tb=short sirius_tests/test_sympy_og_bugs.py -k og_15875
 ```
 
 - [ ] **Step 4: Verify and commit the full group**
 
 ```bash
-python -m pytest -q --tb=short sirius_tests/test_sympy_og_bugs.py -k 'og_18189 or og_20916 or og_13031 or og_22456 or og_12419 or og_23262 or og_23413 or og_17318 or og_13647 or og_15875'
+../.venv/bin/python -m pytest -q --tb=short sirius_tests/test_sympy_og_bugs.py -k 'og_18189 or og_20916 or og_13031 or og_22456 or og_12419 or og_23262 or og_23413 or og_17318 or og_13647 or og_15875'
 git add sympy
 git commit -m "Reintroduce SymPy OG bugs batch two"
 ```
@@ -628,7 +628,7 @@ Expected pytest result: `10 failed, 55 deselected`.
 - [ ] **Step 1: Run the 10 checks before mutation**
 
 ```bash
-python -m pytest -q sirius_tests/test_sympy_og_bugs.py -k 'og_18211 or og_24539 or og_19495 or og_13615 or og_20801 or og_24661 or og_19783 or og_19040 or og_21379'
+../.venv/bin/python -m pytest -q sirius_tests/test_sympy_og_bugs.py -k 'og_18211 or og_24539 or og_19495 or og_13615 or og_20801 or og_24661 or og_19783 or og_19040 or og_21379'
 ```
 
 Expected: `10 passed, 55 deselected`.
@@ -654,21 +654,21 @@ git apply -R --reject --whitespace=nowarn /private/tmp/sympy__sympy-21379.patch
 Run the matching selector after each edit. Expected: assertion failure or historic exception for every selected item, with successful collection.
 
 ```bash
-python -m pytest -q --tb=short sirius_tests/test_sympy_og_bugs.py -k og_18211
-python -m pytest -q --tb=short sirius_tests/test_sympy_og_bugs.py -k og_24539
-python -m pytest -q --tb=short sirius_tests/test_sympy_og_bugs.py -k og_19495
-python -m pytest -q --tb=short sirius_tests/test_sympy_og_bugs.py -k og_13615
-python -m pytest -q --tb=short sirius_tests/test_sympy_og_bugs.py -k og_20801
-python -m pytest -q --tb=short sirius_tests/test_sympy_og_bugs.py -k og_24661
-python -m pytest -q --tb=short sirius_tests/test_sympy_og_bugs.py -k og_19783
-python -m pytest -q --tb=short sirius_tests/test_sympy_og_bugs.py -k og_19040
-python -m pytest -q --tb=short sirius_tests/test_sympy_og_bugs.py -k og_21379
+../.venv/bin/python -m pytest -q --tb=short sirius_tests/test_sympy_og_bugs.py -k og_18211
+../.venv/bin/python -m pytest -q --tb=short sirius_tests/test_sympy_og_bugs.py -k og_24539
+../.venv/bin/python -m pytest -q --tb=short sirius_tests/test_sympy_og_bugs.py -k og_19495
+../.venv/bin/python -m pytest -q --tb=short sirius_tests/test_sympy_og_bugs.py -k og_13615
+../.venv/bin/python -m pytest -q --tb=short sirius_tests/test_sympy_og_bugs.py -k og_20801
+../.venv/bin/python -m pytest -q --tb=short sirius_tests/test_sympy_og_bugs.py -k og_24661
+../.venv/bin/python -m pytest -q --tb=short sirius_tests/test_sympy_og_bugs.py -k og_19783
+../.venv/bin/python -m pytest -q --tb=short sirius_tests/test_sympy_og_bugs.py -k og_19040
+../.venv/bin/python -m pytest -q --tb=short sirius_tests/test_sympy_og_bugs.py -k og_21379
 ```
 
 - [ ] **Step 4: Verify and commit the group**
 
 ```bash
-python -m pytest -q --tb=short sirius_tests/test_sympy_og_bugs.py -k 'og_18211 or og_24539 or og_19495 or og_13615 or og_20801 or og_24661 or og_19783 or og_19040 or og_21379'
+../.venv/bin/python -m pytest -q --tb=short sirius_tests/test_sympy_og_bugs.py -k 'og_18211 or og_24539 or og_19495 or og_13615 or og_20801 or og_24661 or og_19783 or og_19040 or og_21379'
 git add sympy
 git commit -m "Reintroduce SymPy OG bugs batch three"
 ```
@@ -695,7 +695,7 @@ Expected pytest result: `10 failed, 55 deselected`.
 - [ ] **Step 1: Run the 17 checks before mutation**
 
 ```bash
-python -m pytest -q sirius_tests/test_sympy_og_bugs.py -k 'og_21930 or og_13852 or og_13757 or og_13974 or og_24443 or og_21596 or og_22080 or og_13877 or og_18199 or og_13878'
+../.venv/bin/python -m pytest -q sirius_tests/test_sympy_og_bugs.py -k 'og_21930 or og_13852 or og_13757 or og_13974 or og_24443 or og_21596 or og_22080 or og_13877 or og_18199 or og_13878'
 ```
 
 Expected: `17 passed, 48 deselected`.
@@ -722,22 +722,22 @@ git apply -R --reject --whitespace=nowarn /private/tmp/sympy__sympy-13878.patch
 Run the matching command after each mutation. Expected: every selected item fails for the target regression, while import and collection remain successful.
 
 ```bash
-python -m pytest -q --tb=short sirius_tests/test_sympy_og_bugs.py -k og_21930
-python -m pytest -q --tb=short sirius_tests/test_sympy_og_bugs.py -k og_13852
-python -m pytest -q --tb=short sirius_tests/test_sympy_og_bugs.py -k og_13757
-python -m pytest -q --tb=short sirius_tests/test_sympy_og_bugs.py -k og_13974
-python -m pytest -q --tb=short sirius_tests/test_sympy_og_bugs.py -k og_24443
-python -m pytest -q --tb=short sirius_tests/test_sympy_og_bugs.py -k og_21596
-python -m pytest -q --tb=short sirius_tests/test_sympy_og_bugs.py -k og_22080
-python -m pytest -q --tb=short sirius_tests/test_sympy_og_bugs.py -k og_13877
-python -m pytest -q --tb=short sirius_tests/test_sympy_og_bugs.py -k og_18199
-python -m pytest -q --tb=short sirius_tests/test_sympy_og_bugs.py -k og_13878
+../.venv/bin/python -m pytest -q --tb=short sirius_tests/test_sympy_og_bugs.py -k og_21930
+../.venv/bin/python -m pytest -q --tb=short sirius_tests/test_sympy_og_bugs.py -k og_13852
+../.venv/bin/python -m pytest -q --tb=short sirius_tests/test_sympy_og_bugs.py -k og_13757
+../.venv/bin/python -m pytest -q --tb=short sirius_tests/test_sympy_og_bugs.py -k og_13974
+../.venv/bin/python -m pytest -q --tb=short sirius_tests/test_sympy_og_bugs.py -k og_24443
+../.venv/bin/python -m pytest -q --tb=short sirius_tests/test_sympy_og_bugs.py -k og_21596
+../.venv/bin/python -m pytest -q --tb=short sirius_tests/test_sympy_og_bugs.py -k og_22080
+../.venv/bin/python -m pytest -q --tb=short sirius_tests/test_sympy_og_bugs.py -k og_13877
+../.venv/bin/python -m pytest -q --tb=short sirius_tests/test_sympy_og_bugs.py -k og_18199
+../.venv/bin/python -m pytest -q --tb=short sirius_tests/test_sympy_og_bugs.py -k og_13878
 ```
 
 - [ ] **Step 4: Verify and commit the group**
 
 ```bash
-python -m pytest -q --tb=short sirius_tests/test_sympy_og_bugs.py -k 'og_21930 or og_13852 or og_13757 or og_13974 or og_24443 or og_21596 or og_22080 or og_13877 or og_18199 or og_13878'
+../.venv/bin/python -m pytest -q --tb=short sirius_tests/test_sympy_og_bugs.py -k 'og_21930 or og_13852 or og_13757 or og_13974 or og_24443 or og_21596 or og_22080 or og_13877 or og_18199 or og_13878'
 git add sympy
 git commit -m "Reintroduce SymPy OG bugs batch four"
 ```
